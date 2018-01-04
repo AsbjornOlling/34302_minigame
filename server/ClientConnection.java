@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.nio.file.*;
 
 public class ClientConnection {
+	boolean serverActive = true; // For the MinigamesServer main file
+
 	// Socket fields
 	ServerSocket serverSocket;
 	Socket clientSocket;
