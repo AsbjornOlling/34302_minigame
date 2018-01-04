@@ -26,7 +26,7 @@ public class MinigameClient extends JFrame implements ActionListener {
 		server = new ServerConnection();
 
 		// init GameHandler
-		// TODO write code
+		// TODO write class
 		
 		// show finished window
 		this.setVisible(true);
@@ -41,12 +41,36 @@ public class MinigameClient extends JFrame implements ActionListener {
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints cstr = new GridBagConstraints();
 
-		// one text field
-		JTextArea textarea = new JTextArea();
+		// right panel
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new GridBagLayout());
+
+		// label
+		JLabel statusHeader = new JLabel("Session ID: [PLACEHOLDER]");
 		cstr.fill = GridBagConstraints.VERTICAL;
-		cstr.gridx = 1;
+		cstr.anchor = GridBagConstraints.CENTER;
+		cstr.gridx = 0;
 		cstr.gridy = 0;
-		getContentPane().add(textarea);
+		rightPanel.add(statusHeader, cstr);
+		// one text field
+		JTextArea textarea = new JTextArea(20, 20);
+		cstr.fill = GridBagConstraints.VERTICAL;
+		cstr.gridx = 0;
+		cstr.gridy = 1;
+		rightPanel.add(textarea, cstr);
+		// one button
+		JButton button = new JButton("BUTTON");
+		cstr.fill = GridBagConstraints.HORIZONTAL;
+		cstr.gridx = 0;
+		cstr.gridy = 2;
+		rightPanel.add(button, cstr); 
+		// add panel to content pane
+		cstr.fill = GridBagConstraints.VERTICAL;
+		cstr.anchor = GridBagConstraints.LINE_END;
+		cstr.weightx = 0.5;
+		cstr.gridx = 0;
+		cstr.gridy = 0;
+		getContentPane().add(rightPanel, cstr);
 
 		// title, size, and closeoperation
 		this.setTitle("ITS JUST MINIGAMES OKAY");	
