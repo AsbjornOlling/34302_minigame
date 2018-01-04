@@ -32,7 +32,7 @@ public class ServerConnection {
 		try { // connect to server
 			connection = new Socket(HOST, PORT);
 		} catch (Exception ex) {
-			// tell the user that he dun goof
+			// tell the user that he dun goofd
 		} 
 		
 		try { // input reader and output writer
@@ -40,7 +40,7 @@ public class ServerConnection {
 					 new InputStreamReader(connection.getInputStream()));
 			out = new PrintWriter(connection.getOutputStream());
 		} catch (Exception ex) {
-			// tell the user that he dun goof
+			// tell the user that he dun goofd
 		}
 	} // connect
 
