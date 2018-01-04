@@ -19,4 +19,14 @@ public class ClientConnection {
 			System.out.println("ERROR: Could not establish the connection");
 		}
 	} // Constructor
+
+	// Wait for the next incomming package
+	// and put it into an arrayList
+	public Arraylist<String> inPackage() {
+		BufferedReader input = null;
+		ArrayList<String> package = new ArrayList<String>();
+
+
+
+
 } // Class
