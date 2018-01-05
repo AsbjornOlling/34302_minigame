@@ -50,6 +50,35 @@ public class ClientConnection {
 		return request;
 	} //inPackage
 
+	// send a bytearray back
+	public void sendResponse(Response response) {
+		// open output stream
+		BufferedOutputStream output = null;
+		try { 
+			output = new BufferedOutputStream(clientSocket.getOutputStream());
+		} catch (IOException ioEx) {
+			System.out.println("ERROR: Could not open outputstream to client.");
+		}
+
+		// write some shit to client
+		// EDIT SHIT L8R
+		try { 
+			output.write( response.SHIT);
+			if ( DEBUG ) System.out.print(response.SHIT);
+
+			output.flush();
+		} catch (IOException ioEx) {
+			System.out.println("ERROR: Could not write data to outputstream.");
+		}
+
+		// close the client connection
+		try {
+			clientSocket.close();
+		} catch (IOException ioEx) {
+			System.out.println("ERROR: Could not close connection to client.");
+		} //*/
+
+	} // sendResponse
 
 
 } // Class
