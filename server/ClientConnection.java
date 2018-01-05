@@ -25,7 +25,30 @@ public class ClientConnection {
 	public Arraylist<String> inPackage() {
 		BufferedReader input = null;
 		ArrayList<String> package = new ArrayList<String>();
+		
+		// wait for client to connect
+		try { 
+			clientSocket = serverSocket.accept();
+		} catch (IOException ioEx) {
+			System.out.println("ERROR: Client could not connect to server.");
+		}
 
+		// read the request
+		try {
+			String line;
+			input = new BufferedReader( new InputStreamReader( clientSocket.getInputStream() ) );
+			while ( !( (line = input.readLine()) == null ) ) {
+				if ( line.isEmpty() ) break;
+				if (DEBUG) System.out.println(line);
+				request.add(line);
+			}
+			if (DEBUG) System.out.print("\n");
+		} catch (IOException ioEx ) {
+			System.out.println("ERROR: Could not read line from InputStream");
+		}
+
+		return request;
+	} //inPackage
 
 
 
