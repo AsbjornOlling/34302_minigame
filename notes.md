@@ -14,6 +14,9 @@
 	* ClientConnection: 
 		- forbindelse til én spiller
 		- kan lægges ind i en GameSession
+	* Protocol: 
+		- Sørger for at kommunikationen mellem server og client
+		- Sender ACK og holder øje med det samme
 
 
 **Client:**
