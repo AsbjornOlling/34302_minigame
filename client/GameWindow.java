@@ -12,6 +12,7 @@ public class GameWindow extends JFrame implements ActionListener {
 	// gui params
 	public final int GUIWIDTH = 1280;
 	public final int GUIHEIGHT = 720;
+	public final int GAMEWIDTH = 80;
 
 	// constructor
 	public GameWindow() {
@@ -19,41 +20,53 @@ public class GameWindow extends JFrame implements ActionListener {
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints cstr = new GridBagConstraints();
 
-		// right panel
+		// add main game content
+		GameHandler gameScreen = new GameHandler(GAMEWIDTH, GUIHEIGHT);
+		cstr.fill = GridBagConstraints.HORIZONTAL;
+		cstr.weightx = 0.5;
+		cstr.gridx = 0;
+		cstr.gridy = 0;
+		getContentPane().add(gameScreen, cstr);
+
+		// make right panel
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new GridBagLayout());
-		rightPanel.setSize(500, GUIHEIGHT);
+		rightPanel.setSize(GUIWIDTH - GAMEWIDTH, GUIHEIGHT);
+		// add it to content pane
+		cstr.fill = GridBagConstraints.HORIZONTAL;
+		cstr.anchor = GridBagConstraints.LINE_END;
+		cstr.weightx = 0.5;
+		cstr.gridx = 1;
+		cstr.gridy = 0;
+		getContentPane().add(rightPanel, cstr);
 
-		// label
+		// label at top of the right panel
 		JLabel statusHeader = new JLabel("Session ID: [PLACEHOLDER]",
 																		 JLabel.CENTER);
 		cstr.fill = GridBagConstraints.VERTICAL;
 		cstr.anchor = GridBagConstraints.CENTER;
+		cstr.weightx = 0.5;
 		cstr.gridx = 0;
 		cstr.gridy = 0;
 		rightPanel.add(statusHeader, cstr);
 
-		// one text field TODO replace with JTable
-		JTextArea textarea = new JTextArea(20, 20);
+		// add scoreboard in the middle
 		cstr.fill = GridBagConstraints.VERTICAL;
+		cstr.anchor = GridBagConstraints.PAGE_START;
 		cstr.gridx = 0;
 		cstr.gridy = 1;
+		cstr.weightx = 0.5;
+		cstr.weighty = 0;
 		rightPanel.add(makeScoreboard(), cstr);
 
-		// one button
-		JButton button = new JButton("KILL");
-		cstr.fill = GridBagConstraints.HORIZONTAL;
+		// and one button in the bottom
+		JButton button = new JButton("Exit");
+		cstr.fill = GridBagConstraints.VERTICAL;
 		cstr.gridx = 0;
 		cstr.gridy = 2;
 		rightPanel.add(button, cstr); 
 
 		// add panel to content pane
-		cstr.fill = GridBagConstraints.VERTICAL;
-		cstr.anchor = GridBagConstraints.LINE_END;
-		cstr.weightx = 0.5;
-		cstr.gridx = 0;
-		cstr.gridy = 0;
-		getContentPane().add(rightPanel, cstr);
 
 		// title, size, and closeoperation
 		setTitle("ITS JUST MINIGAMES OKAY");	
@@ -69,7 +82,7 @@ public class GameWindow extends JFrame implements ActionListener {
 	public JTable makeScoreboard() {
 		TableModel tablemodel = new AbstractTableModel() {
 			public int getColumnCount() { return 2; }
-			public int getRowCount() { return 40; }
+			public int getRowCount() { return 20; }
 			public Object getValueAt(int row, int col) { 
 				return new Integer(row*col); 
 			}

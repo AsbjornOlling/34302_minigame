@@ -21,6 +21,7 @@ public class ServerConnection {
 	private BufferedReader in;
 	private PrintWriter out;
 
+
 	// constructor
 	public ServerConnection() {
 		connect();
@@ -45,6 +46,14 @@ public class ServerConnection {
 	} // connect
 
 
+	// just send one string immediately
+	// mainly for testing
+	public void sendString(String string) {
+		out.print(string+"\r\n");
+		out.flush();
+	}
+
+
 	// send and receive data
 	public void update() {
 		// send score
@@ -61,5 +70,4 @@ public class ServerConnection {
 	// make a new game session
 	public void createSession() {
 	} // createSession
-
 } // class

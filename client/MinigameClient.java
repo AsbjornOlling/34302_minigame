@@ -19,7 +19,6 @@ public class MinigameClient {
 		server = new ServerConnection();
 
 		// init GameHandler
-		
 	} // constructor
 
 	public static void main(String[] args) {
