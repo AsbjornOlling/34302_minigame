@@ -1,5 +1,6 @@
 /*
  * Client for the minigame-game
+ * master class that handles all the things
  */
 
 // all the good things
