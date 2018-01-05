@@ -24,12 +24,46 @@ public class GameHandler extends JPanel {
 	} // constructor
 
 
+	// construct and display a minigame
+	public void loadGame(Game game) {
+		this.removeAll();
+		this.add(game);
+	} // Game
+
 	public Dimension getPreferredSize() {
 		return new Dimension(WIDTH, HEIGHT);
 	} // getPreferredSize
 
-
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 	} // paintComponent
-}
+} // GameHandler
+
+
+// parent class for all minigames
+abstract class Game extends JPanel {
+
+	// constructor
+	public Game() {
+	} // constructor
+
+	public Dimension getPreferredSize() {
+		return new Dimension(WIDTH, HEIGHT);
+	} // getPreferredSize
+} // Game
+
+
+class ButtonGame extends Game {
+	// constructor 
+	public ButtonGame() {
+	} // constructor
+} // ButtonGame
+
+
+   /*\
+   ***
+   *** 
+   ***
+   ***
+ *******
+\*******/
