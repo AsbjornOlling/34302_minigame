@@ -33,7 +33,37 @@
 	
 ## Protocol:
 
-**On session create:**
-	* Generate session code
-	* 
 
+*Fra klient*
+
+SESSIONCREATE
+PNAME: dinmor
+END
+
+SESSIONCONNECT
+PNAME: dinmor
+SESSIONID: ab78qz
+END
+
+GAMECOMPLETE
+PNAME: dinmor
+GSCORE: *tal mellem 0 og 100*
+END
+
+
+*Fra server*
+
+SESSIONJOINED
+SESSIONID: ab78qz
+GAMES: 1, 15, 2, 16
+END
+
+SCOREUPDATE
+PNAME: dinmor
+PSCORE: *akkumuleret score so far*
+PNAME: dinfar
+PSCORE: *akkumuleret score so far*
+...
+PNAME: dinbror
+PSCORE: *akkumuleret score so far*
+END
