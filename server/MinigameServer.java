@@ -17,7 +17,7 @@ public class MinigameServer {
 		// Recives packages from client
 		// as long as the server is active
 		// This is permanent right now
-		while (connection.ServerActive == true) {
+		while (connection.serverActive == true) {
 			
 			// Open socket and wait for package to arrive
 			ArrayList<String> incommingPackage = connection.inPackage();
