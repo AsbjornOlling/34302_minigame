@@ -22,7 +22,7 @@ public class GameWindow extends JFrame implements ActionListener {
 		// right panel
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new GridBagLayout());
-		rightPanel.setSize(50, GUIWIDTH);
+		rightPanel.setSize(500, GUIHEIGHT);
 
 		// label
 		JLabel statusHeader = new JLabel("Session ID: [PLACEHOLDER]",
@@ -69,7 +69,7 @@ public class GameWindow extends JFrame implements ActionListener {
 	public JTable makeScoreboard() {
 		TableModel tablemodel = new AbstractTableModel() {
 			public int getColumnCount() { return 2; }
-			public int getRowCount() { return 30; }
+			public int getRowCount() { return 40; }
 			public Object getValueAt(int row, int col) { 
 				return new Integer(row*col); 
 			}
