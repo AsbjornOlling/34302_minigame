@@ -36,20 +36,15 @@
 
 *Fra klient*
 
-SESSIONCREATE
-PNAME: dinmor
-END
-
 SESSIONCONNECT
 PNAME: dinmor
-SESSIONID: ab78qz
+SESSIONID: ab78qz *eller None*
 END
 
 GAMECOMPLETE
 PNAME: dinmor
 GSCORE: *tal mellem 0 og 100*
 END
-
 
 *Fra server*
 
