@@ -8,16 +8,18 @@ import java.util.*;
 public class MinigameClient {
 	// connection object
 	ServerConnection server;
+	GameWindow wind;
 	
 	// constructor
 	public MinigameClient() {
 		// init gui
-		GameWindow wind = new GameWindow();
+		wind = new GameWindow();
 
 		// init ServerConnection
 		server = new ServerConnection();
 
 		// init GameHandler
+		
 	} // constructor
 
 	public static void main(String[] args) {
