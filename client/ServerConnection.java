@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 
 public class ServerConnection {
+	MinigameClient parent;
+
 	// server address
 	private final String HOST = "localhost";
 	private final int PORT = 6666;
@@ -23,7 +25,10 @@ public class ServerConnection {
 
 
 	// constructor
-	public ServerConnection() {
+	public ServerConnection(MinigameClient parent) {
+		this.parent = parent;
+
+		// make connection objects
 		connect();
 	} // constructor
 
@@ -51,7 +56,12 @@ public class ServerConnection {
 	public void sendString(String string) {
 		out.print(string+"\r\n");
 		out.flush();
-	}
+	} // sendString
+
+
+	// send gameComplete
+	public void gameComplete(int score) {
+	} // gameComplete
 
 
 	// send and receive data

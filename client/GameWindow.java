@@ -9,37 +9,42 @@ import java.awt.event.*;
 import javax.swing.table.*;
 
 public class GameWindow extends JFrame implements ActionListener {
-	// gui params
-	public final int GUIWIDTH = 1280;
-	public final int GUIHEIGHT = 720;
-	public final int GAMEWIDTH = 1000;
-	public final int PANELWIDTH = GUIWIDTH - GAMEWIDTH;
+	// parent object
+	MinigameClient parent;
+
+	// size parameters
+	public final int GUIWIDTH;
+	public final int GUIHEIGHT;
+	public final int GAMEWIDTH;
+	public final int PANELWIDTH;
 
 	// constructor
-	public GameWindow() {
+	public GameWindow(MinigameClient parent) {
+		this.parent = parent;
+		this.GUIWIDTH = parent.GUIWIDTH;
+		this.GUIHEIGHT = parent.GUIHEIGHT;
+		this.GAMEWIDTH = parent.GAMEWIDTH;
+		this.PANELWIDTH = GUIWIDTH - GAMEWIDTH;
+
 		// content pane layout
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints cstr = new GridBagConstraints();
-
-		// make game handler
-		GameHandler gameScreen = new GameHandler(GAMEWIDTH, GUIHEIGHT);
 
 		// add game to content pane
 		cstr.gridx = 0;
 		cstr.gridy = 0;
 		cstr.weightx = 1;
-		cstr.weighty = 0;
+		cstr.weighty = 1;
 		cstr.fill = GridBagConstraints.HORIZONTAL;
-		getContentPane().add(gameScreen, cstr);
+		getContentPane().add(parent.game, cstr);
 
 		// make right panel
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new GridBagLayout());
-
 		// add panel to content pane 
 		cstr.gridx = 1;
 		cstr.gridy = 0;
-		cstr.weightx = 1;
+		cstr.weightx = 0;
 		cstr.weighty = 1;
 		cstr.fill = GridBagConstraints.VERTICAL;
 		getContentPane().add(rightPanel, cstr);

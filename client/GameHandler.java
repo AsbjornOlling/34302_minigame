@@ -11,12 +11,16 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class GameHandler extends JPanel {
+	MinigameClient parent;
+
 	final int WIDTH, HEIGHT;
+	String playerName = "dinmor";
 
 	// constructor
-	public GameHandler(int WIDTH, int HEIGHT) {
-		this.WIDTH = WIDTH;
-		this.HEIGHT = HEIGHT;
+	public GameHandler(MinigameClient parent) {
+		this.parent = parent;
+		this.WIDTH = parent.GAMEWIDTH;
+		this.HEIGHT = parent.GUIHEIGHT;
 
 		this.setLayout(new GridLayout(1, 1));
 
@@ -40,6 +44,9 @@ public class GameHandler extends JPanel {
 	// send gameComplete message
 	// and load the next game
 	public void gameComplete(int score) {
+		// send GAMECOMPLETE message
+
+		// load new game
 		loadGame(new ClickTenTimes(this));
 	} // gameComplete
 
