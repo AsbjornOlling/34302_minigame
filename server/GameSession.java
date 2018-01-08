@@ -67,6 +67,7 @@ public class GameSession {
 		if (inLobby) {
 			clients.add(client);
 			scoreboard.put(client.pName, 0);
+			System.out.println("PLAYER " + client.pName + "JOINED SESSION " + sessionID);
 		} else {
 			// game in progress
 			// tell user to fuck off

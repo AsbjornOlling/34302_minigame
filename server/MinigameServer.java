@@ -25,8 +25,8 @@ public class MinigameServer {
 			System.out.println("ERROR: Could not read wordlist");
 		}
 
-		// list of sessions
-		sessions = new ArrayList<GameSession>();
+		// main sessions register
+		sessions = new HashMap<String,GameSession>();
 
 		// listener object
 		newConnects = new Listener(this);
@@ -34,7 +34,7 @@ public class MinigameServer {
 		cThread.start();
 
 		// make a session - just for testing
-		GameSession s = new GameSession(this);
+		// GameSession s = new GameSession(this);
 	} // constructor
 
 

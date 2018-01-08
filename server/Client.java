@@ -31,7 +31,7 @@ public class Client implements Runnable {
 		// make outgoint data handler
 		out = new ClientOut(clientSocket);
 		Thread outThread = new Thread(out);
-		outThread.start();
+		outThread.start(); //*/
 	} //Client
 
 
@@ -42,17 +42,23 @@ public class Client implements Runnable {
 		while (shouldRun) {
 			// if a package is available
 			if (in.packetQueue.size() >= 1) {
+				System.out.println("FIRST RECEIVED FROM CLIENT");
+
+				// connect to session
 				String[] packet = in.getNextPacket();
 				sessionConnect(packet);
 				shouldRun = false;
 			} // fi
 		} // loop
+
 	} // run()
 
 
 	// join a session based on session id
 	// assume package is valid
 	public void sessionConnect(String[] packet) {
+		System.out.println("ATTEMPTING SESSION CONNECT");
+
 		// get player name
 		pName = packet[1].replace("PNAME: ", "");
 
@@ -102,24 +108,28 @@ class ClientIn implements Runnable {
 
 	// thread loop
 	public void run() {
-		// read any incoming lines
-		try { dataQueue.add(inReader.readLine()); } catch (IOException ioEx) { 
-			System.out.println("ERROR: Could not read input.");
-		}
-		// try to split dataQueue into packets
-		parseDataQueue();
-	} // thread loop
+		while (true) {
+			// read any incoming lines
+			try { dataQueue.add(inReader.readLine()); } catch (IOException ioEx) { 
+				System.out.println("ERROR: Could not read input.");
+			}
+			// try to split dataQueue into packets
+			parseDataQueue();
+		} // thread loop
+	} // run()
 
 
 	// read data queue and split it into discrete packets if possible
 	public void parseDataQueue() {
 		// if end of message found
-		if (dataQueue.toArray()[dataQueue.size() - 1] == "END") {
+		if (dataQueue.toArray()[dataQueue.size() - 1].equals("END")) {
 			// add packet to packetQueue
-			packetQueue.add((String[]) dataQueue.toArray());
+			packetQueue.add(dataQueue.toArray(new String[dataQueue.size()]));
 			// clear dataQueue
 			dataQueue.clear();
-		}		
+
+			System.out.println("PACKAGE RECEIVED");
+		}	
 	} // parseQueue
 
 

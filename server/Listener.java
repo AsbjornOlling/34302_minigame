@@ -42,5 +42,8 @@ public class Listener implements Runnable {
 
 		// make new client connection
 		Client aClient = new Client (parent, clientSocket);
+		Thread cThread = new Thread(aClient);
+		cThread.start();
+		System.out.println("NEW CLIENT CONNECTION");
 	} // run
 } // Class Listener
