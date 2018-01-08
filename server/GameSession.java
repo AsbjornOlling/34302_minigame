@@ -16,10 +16,10 @@ public class GameSession {
 	Random r; // randomizer
 
 	ArrayList<Object> clients;					// all connected clients
-	HashMap<String,Integer> scoreboard; // scoreboard...
+	HashMap<String,Integer> scoreboard; // a atable of points (PName:Points))
 	Integer[] gamesList;								// list of game ids to play
-	String sessionID;
 
+	String sessionID;						// id for players to join with
 	int gameLength = 1; 				// number of minigames to play
 	boolean lobbyMode = true;		// allow other players to join
 
@@ -38,6 +38,9 @@ public class GameSession {
 		// generate session ID
 		sessionID = genSessionID();
 		System.out.println("SESSION MADE: "+sessionID);
+
+		// put self into main session register
+		parent.sessions.put(sessionID, this);
 	} // constructor
 
 
@@ -48,12 +51,11 @@ public class GameSession {
 		// get some random words from the wordlist
 		for (int i = 0; i < idLength; i++) {
 			sessionID += parent.wordlist[r.nextInt(parent.wordlist.length)];
-			// add space if not the last word
+			// add a space if not the last word
 			if (i + 1 < idLength) {
 				sessionID += " ";
 			}
 		}
 		return sessionID;
 	} // genSessionID
-
 } // GameSession

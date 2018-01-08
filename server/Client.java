@@ -12,7 +12,6 @@ public class Client {
 	ClientIn in;
 	ClientOut out;
 
-
 	// constructor
 	public Client (Socket clientSocket) {
 		this.clientSocket = clientSocket;
