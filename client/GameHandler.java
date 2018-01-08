@@ -14,7 +14,7 @@ public class GameHandler extends JPanel {
 	MinigameClient parent;
 
 	final int WIDTH, HEIGHT;
-	String playerName = "dinmor";
+	String pName = "dinmor";
 
 	// constructor
 	public GameHandler(MinigameClient parent) {
@@ -44,7 +44,8 @@ public class GameHandler extends JPanel {
 	// send gameComplete message
 	// and load the next game
 	public void gameComplete(int score) {
-		// send GAMECOMPLETE message
+		// send GAMECOMPLETE message to server
+		parent.server.gameComplete(score);
 
 		// load new game
 		loadGame(new ClickTenTimes(this));

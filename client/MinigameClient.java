@@ -15,21 +15,19 @@ public class MinigameClient {
 	// main essential objects
 	GameHandler game;
 	ServerConnection server;
-	GameWindow wind;
+	GameWindow window;
 	
-
 	// constructor
 	public MinigameClient() {
 		// game handler object
 		game = new GameHandler(this);
 
 		// init gui
-		wind = new GameWindow(this);
+		window = new GameWindow(this);
 
 		// init ServerConnection
 		server = new ServerConnection(this);
 	} // constructor
-
 
 	// main method
 	public static void main(String[] args) {

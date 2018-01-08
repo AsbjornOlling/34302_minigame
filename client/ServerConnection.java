@@ -59,8 +59,13 @@ public class ServerConnection {
 	} // sendString
 
 
-	// send gameComplete
+	// send gameComplete message
 	public void gameComplete(int score) {
+		out.print("GAMECOMPLETE\r\n");
+		out.print("PNAME: " + parent.game.pName + "\r\n");
+		out.print("GSCORE: " + score + "\r\n");
+		out.print("END" + "\r\n");
+		out.flush();
 	} // gameComplete
 
 
