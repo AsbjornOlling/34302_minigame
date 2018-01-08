@@ -3,34 +3,36 @@
  * MiniGames server part
  */
 
-// Importing important imports
-import java.io.*;
-import java.util.*;
-import java.net.*;
-
 public class MinigameServer {
+	// constant params
+	public final int PORT = 6666;
+
+	// main objects
+	Listener newConnects;
+	GameState state;
+
+	// constructor
+	public MinigameServer() {
+		// make listener object
+		newConnects = new Listener(this);
+		// start thread
+		Thread cThread = new Thread(newConnects);
+		cThread.start();
+
+		// make gamestate object
+		state = new GameState(this);
+	} // constructor
+
+	// temp testing loop
+	public void deleteMe() {
+		while (true) {
+			state.printAllPackets();
+		}
+	}
 	
-		public static void main(String[] args) {
-		
-			// Calling the cunstructor in ClientConnection
-			ClientConnection connection = new ClientConnection(6666);
-
-			// Recives packages from client
-			// as long as the server is active
-			// This is permanent right now
-			while (connection.serverActive == true) {
-			
-				// Open socket and wait for package to arrive
-				ArrayList<String> incommingPackage = connection.inPackage();
-
-				// Gonna call the the GameSession when that is made
-				System.out.println("I should contact GameSession now");
-			}
-			
-			connection.closeSocket();
-				
-			System.out.println("Connection closed");
-			// Connection closed
-
+	// main
+	public static void main(String[] args) {
+		MinigameServer serverInstance = new MinigameServer();
+		serverInstance.deleteMe();
 	} // Main
 } // Class
