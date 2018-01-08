@@ -60,6 +60,7 @@ public class GameHandler extends JPanel {
 // parent class for all minigames
 abstract class Game extends JPanel implements Runnable, ActionListener {
 	GameHandler handler;
+	int gameOverScreenTime = 500;
 
 
 	// constructor
@@ -152,6 +153,12 @@ class ClickTenTimes extends Game {
 		// calculate score TODO make score of max 100
 		int score = (int) timePassed;
 		System.out.println("SCORE GOT: "+score);
+
+		// show game over screen for some time
+		tenClickButton.setText("DONE");
+
+		// sleep for a time
+		try { Thread.sleep(gameOverScreenTime); } catch (Exception e) {}
 
 		// send gamescore, load new game
 		handler.gameComplete(score);
