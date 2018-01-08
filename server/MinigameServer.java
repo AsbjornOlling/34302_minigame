@@ -9,7 +9,6 @@ import java.io.*;
 import java.util.*;
 
 public class MinigameServer {
-	// constant params
 	public final int PORT = 6666;
 
 	// wordlist for session IDs
@@ -17,6 +16,7 @@ public class MinigameServer {
 
 	// main objects
 	Listener newConnects;
+	HashMap<String,GameSession> sessions;
 
 	// constructor
 	public MinigameServer() {
@@ -25,11 +25,15 @@ public class MinigameServer {
 			System.out.println("ERROR: Could not read wordlist");
 		}
 
-		// make listener object
+		// list of sessions
+		sessions = new ArrayList<GameSession>();
+
+		// listener object
 		newConnects = new Listener(this);
 		Thread cThread = new Thread(newConnects);
 		cThread.start();
 
+		// make a session - just for testing
 		GameSession s = new GameSession(this);
 	} // constructor
 
@@ -41,9 +45,11 @@ public class MinigameServer {
 		ArrayList<String> lines = new ArrayList<String>();
 		String line = null;
 
+		// read file, add to arraylist
 		while ((line = br.readLine()) != null) {
 			lines.add(line);
 		}
+		// convert arraylist to array and put into object field
 		wordlist = lines.toArray(new String[lines.size()]);
 	} // loadWordList
 

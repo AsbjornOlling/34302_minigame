@@ -6,14 +6,21 @@ import java.net.Socket;
 import java.net.ServerSocket;
 import java.nio.file.*;
 
-public class Client {
+public class Client implements Runnable {
+	// not really direct parent but whatevs DUDE
+	MinigameServer parent;
 
+	// connection objects
 	Socket clientSocket;
 	ClientIn in;
 	ClientOut out;
 
+	// client info
+	String pName;
+
 	// constructor
-	public Client (Socket clientSocket) {
+	public Client (MinigameServer parent, Socket clientSocket) {
+		this.parent = parent;
 		this.clientSocket = clientSocket;
 
 		// make incoming data handler
@@ -25,29 +32,58 @@ public class Client {
 		out = new ClientOut(clientSocket);
 		Thread outThread = new Thread(out);
 		outThread.start();
-
 	} //Client
 
 
-	// Close the server socket
-	public void closeSocket() {
-		// close the client connection
-		try {
-			clientSocket.close();
-		} catch (IOException ioEx) {
-			System.out.println("ERROR: Could not close connection to client.");
-		} //*/
+	// wait for first packet to arrive
+	// then hand over client to a session
+	public void run() {
+		boolean shouldRun = true;
+		while (shouldRun) {
+			// if a package is available
+			if (in.packetQueue.size() >= 1) {
+				String[] packet = in.getNextPacket();
+				sessionConnect(packet);
+				shouldRun = false;
+			} // fi
+		} // loop
+	} // run()
 
+
+	// join a session based on session id
+	// assume package is valid
+	public void sessionConnect(String[] packet) {
+		// get player name
+		pName = packet[1].replace("PNAME: ", "");
+
+		// get session ID
+		String sessionID = packet[2].replace("SESSION ID: ", "");
+		
+		if (sessionID != "NONE") {
+			// join an existing session
+			GameSession session = parent.sessions.get(sessionID);
+			session.sessionConnect(this);
+		} else {
+			// create new session
+			GameSession session = new GameSession(parent);
+		}
+	} // joinSession
+
+
+	// terminate connection to client
+	public void closeSocket() {
+		try { clientSocket.close(); } catch (IOException ioEx) {
+			System.out.println("ERROR: Could not close connection to client.");
+		}
 	} // CloseSocket
 } // Class
 
 
 // concurrent input reader for Client
 class ClientIn implements Runnable {
-	BufferedReader inReader;
-	ArrayList<String> dataQueue;
-	ArrayList<String[]> packetQueue;// Maaske bedre med bare ArrayList af StringArrays
-
+	private BufferedReader inReader;
+	private ArrayList<String> dataQueue;
+	protected ArrayList<String[]> packetQueue;
 
 	// constructor
 	public ClientIn(Socket clientSocket) {
@@ -59,47 +95,46 @@ class ClientIn implements Runnable {
 		try { 
 			inReader = new BufferedReader( new InputStreamReader( clientSocket.getInputStream() ) );
 		} catch (IOException ioEx) {
-			System.out.println("ERROR: Could not read input.");
+			System.out.println("ERROR: Could not make input reader.");
 		}
-	} // constructo
+	} // constr
 
 
 	// thread loop
 	public void run() {
 		// read any incoming lines
-		try { 
-		dataQueue.add(inReader.readLine());
-		} catch (IOException ioEx) {
+		try { dataQueue.add(inReader.readLine()); } catch (IOException ioEx) { 
 			System.out.println("ERROR: Could not read input.");
 		}
-
-		// try to split queue into packets
+		// try to split dataQueue into packets
 		parseDataQueue();
 	} // thread loop
 
 
 	// read data queue and split it into discrete packets if possible
 	public void parseDataQueue() {
-
 		// if end of message found
 		if (dataQueue.toArray()[dataQueue.size() - 1] == "END") {
-
-			packetQueue.add((String[]) dataQueue.toArray()); // Add dataQueue to packetQueue
-			dataQueue.clear(); // Remove all elements in dataQueue
+			// add packet to packetQueue
+			packetQueue.add((String[]) dataQueue.toArray());
+			// clear dataQueue
+			dataQueue.clear();
 		}		
 	} // parseQueue
 
 
-	// get first packet from list of packets
+	// extract first packet from packetQueue
 	public String[] getNextPacket() {
-		return (String[]) packetQueue.toArray()[0];
+		String[] packet = (String[]) packetQueue.toArray()[0];
+		packetQueue.remove(packet);
+		return packet;
 	} // getNextPacket
 } // ClientIn
 
 
 // concurrent output writer for Client
 class ClientOut implements Runnable {
-
+// TODO actually write this class
 
 	// constructor
 	public ClientOut(Socket clientSocket) {

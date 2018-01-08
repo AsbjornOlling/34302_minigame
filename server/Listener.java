@@ -33,14 +33,14 @@ public class Listener implements Runnable {
 	// thread loop
 	public void run() {
 		// wait for new connection
+		// code hangs here for a while
 		try { 
 			clientSocket = serverSocket.accept();
 		} catch (IOException ioEx) {
 			System.out.println("ERROR: Client could not connect to server.");
 		}
 
-		// make new clientConnection and add to gameState
-		Client aClient = new Client (clientSocket);
-		parent.state.clients.add(aClient);
+		// make new client connection
+		Client aClient = new Client (parent, clientSocket);
 	} // run
 } // Class Listener
