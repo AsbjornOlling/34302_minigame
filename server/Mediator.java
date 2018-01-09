@@ -53,7 +53,7 @@ public class Mediator {
 			// send package if valid
 			if (validHeader && validID) {
 				listener.sendPacket(pck);
-			} 
+			}
 		} // listeners loop
 	} // sendPack
 } // Mediator
