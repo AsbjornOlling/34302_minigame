@@ -1,4 +1,3 @@
-
 // important imports
 import java.io.*;
 import java.util.ArrayList;
@@ -38,11 +37,14 @@ public class Client implements Runnable {
 	// wait for first packet to arrive
 	// then hand over client to a session
 	public void run() {
+		// run until fist packet received
 		boolean shouldRun = true;
 		while (shouldRun) {
-			// if a package is available
-			if (in.packetQueue.size() >= 1) {
-				System.out.println("FIRST RECEIVED FROM CLIENT");
+
+			// if the first packet is received
+			// this only works by converting to array, not just .size()
+			if (in.packetQueue.toArray().length != 0) { 
+				System.out.println("FIRST PACKET FROM A CLIENT");
 
 				// connect to session
 				String[] packet = in.getNextPacket();
@@ -50,7 +52,6 @@ public class Client implements Runnable {
 				shouldRun = false;
 			} // fi
 		} // loop
-
 	} // run()
 
 
@@ -110,7 +111,7 @@ class ClientIn implements Runnable {
 	public void run() {
 		while (true) {
 			// read any incoming lines
-			try { dataQueue.add(inReader.readLine()); } catch (IOException ioEx) { 
+			try { dataQueue.add(inReader.readLine()); } catch (IOException e) { 
 				System.out.println("ERROR: Could not read input.");
 			}
 			// try to split dataQueue into packets
@@ -128,7 +129,8 @@ class ClientIn implements Runnable {
 			// clear dataQueue
 			dataQueue.clear();
 
-			System.out.println("PACKAGE RECEIVED");
+			System.out.println("PACKET RECEIVED");
+			System.out.println("NO OF UNPULLED PACKETS: " + packetQueue.size());
 		}	
 	} // parseQueue
 
@@ -137,6 +139,7 @@ class ClientIn implements Runnable {
 	public String[] getNextPacket() {
 		String[] packet = (String[]) packetQueue.toArray()[0];
 		packetQueue.remove(packet);
+		System.out.println("PULLING PACKET");
 		return packet;
 	} // getNextPacket
 } // ClientIn
