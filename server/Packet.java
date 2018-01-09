@@ -12,6 +12,7 @@ public class Packet {
 
 	// constructor
 	public Packet(String[] packetArray, Client source) {
+		// source client
 		SOURCE = source;
 
 		// parse packetArray

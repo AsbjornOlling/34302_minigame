@@ -36,14 +36,16 @@ public class Client extends PacketListener implements Runnable {
 	} //Client
 
 
-	// pass packets to mediator
+	// construct Packets and send to mediator
 	public void run() {
 		boolean shouldRun = true;
 		while (shouldRun) {
 			// only works with .toArray().length, and NOT with .size()
 			if (in.packetQueue.toArray().length != 0) { 
+				// construct Package
 				String[] packet = in.getNextPacket();
 				Packet pck = new Packet(packet, this);
+				// send to mediator
 				Mediator.getInstance().sendPacket(pck);
 			} // fi
 		} // loop
@@ -53,9 +55,10 @@ public class Client extends PacketListener implements Runnable {
 	// receive packet from mediator
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONCONNECT") 
+				&& pck.SOURCE == this
 				&& pck.SESSIONID.equals("NONE")) {
 			// make new session
-			GameSession newsession = new GameSession(parent);
+			GameSession newsession = new GameSession(parent, this);
 		}
 	} // recvPacket
 

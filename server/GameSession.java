@@ -15,6 +15,7 @@ public class GameSession extends PacketListener {
 
 	Random r; // randomizer
 
+	Client host;												// creator of the session
 	ArrayList<Client> clients;					// all connected clients
 	HashMap<String,Integer> scoreboard; // a atable of points (PName:Points))
 	Integer[] gamesList;								// list of game ids to play
@@ -25,8 +26,12 @@ public class GameSession extends PacketListener {
 
 
 	// constructor
-	public GameSession(MinigameServer parent) {
+	public GameSession(MinigameServer parent, Client host) {
 		this.parent = parent;
+
+		// add host
+		this.host = host;
+		addClient(host);
 
 		// make randomizer
 		r = new Random();
@@ -51,9 +56,9 @@ public class GameSession extends PacketListener {
 	
 	// receive packets from mediator
 	public void recvPacket(Packet pck) {
-		if (pck.HEADER == "SESSIONCONNECT") {
-			// TODO find client somehow
-			// maybe based on a pname through a bigger hashmap?
+		if (pck.HEADER.equals("SESSIONCONNECT")
+				&& pck.SESSIONID.equals(this.sessionID)) {
+			addClient(pck.SOURCE);
 		}
 	} // recvPacket
 
