@@ -51,32 +51,12 @@ public class Client extends PacketListener implements Runnable {
 
 	// receive packet from mediator
 	public void recvPacket(Packet pck) {
-		if (pck.HEADER.equals("SESSIONCONNECT")) {
-			// do sOMETHING
+		if (pck.HEADER.equals("SESSIONCONNECT") 
+				&& pck.SESSIONID.equals("NONE")) {
+			// make new session
+			GameSession newsession = new GameSession(parent);
 		}
 	} // recvPacket
-
-
-	// join a session based on session id
-	// assume package is valid
-	public void sessionConnect(String[] packet) {
-		System.out.println("ATTEMPTING SESSION CONNECT");
-
-		// get player name
-		pName = packet[1].replace("PNAME: ", "");
-
-		// get session ID
-		String sessionID = packet[2].replace("SESSION ID: ", "");
-		
-		if (sessionID != "NONE") {
-			// join an existing session
-			GameSession session = parent.sessions.get(sessionID);
-			session.sessionConnect(this);
-		} else {
-			// create new session
-			GameSession session = new GameSession(parent);
-		}
-	} // joinSession
 
 
 	// terminate connection to client
