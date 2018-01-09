@@ -27,10 +27,7 @@ public class Mediator {
 
 
 	// construct a new packet and send to all valid listners
-	public void sendPacket(String[] packet) {
-		// construct packet
-		Packet pck = new Packet(packet);
-		
+	public void sendPacket(Packet pck) {
 		// loop through all listeners
 		for (InternalPacketListener listener : listeners) {
 			// reset czech vars

@@ -54,15 +54,13 @@ public class GameSession extends PacketListener {
 		if (pck.HEADER == "SESSIONCONNECT") {
 			// TODO find client somehow
 			// maybe based on a pname through a bigger hashmap?
-			Client c;
-			addClient(c);
 		}
 	} // recvPacket
 
 
 	// add client to lists
 	// triggered by SESSIONCONNECT packet
-	private void addClient(Client client) {
+	public void addClient(Client client) {
 		if (inLobby) {
 			clients.add(client);
 			scoreboard.put(client.pName, 0);

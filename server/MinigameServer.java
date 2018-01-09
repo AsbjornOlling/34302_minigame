@@ -18,6 +18,7 @@ public class MinigameServer {
 	// main objects
 	Listener newConnects;
 	HashMap<String,GameSession> sessions;
+	HashMap<String,Client> allClients;
 
 	// constructor
 	public MinigameServer() {
@@ -26,8 +27,9 @@ public class MinigameServer {
 			System.out.println("ERROR: Could not read wordlist");
 		}
 
-		// main sessions register
+		// init hashmaps
 		sessions = new HashMap<String,GameSession>();
+		allClients = new HashMap<String,Client>();
 
 		// listener object
 		newConnects = new Listener(this);

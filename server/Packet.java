@@ -10,7 +10,7 @@ public class Packet {
 	public final int GSCORE;
 
 	// constructor
-	public Packet(String[] packetArray) {
+	public Packet(String[] packetArray, Client source) {
 		HEADER = packetArray[0];
 		PNAME = packetArray[1].replace("PNAME: ", "");
 		SESSIONID = packetArray[2].replace("SESSIONID: ", "");
