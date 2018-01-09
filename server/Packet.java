@@ -5,12 +5,16 @@ public class Packet {
 	public final String HEADER;
 	public final String PNAME;
 	public final String SESSIONID;
+	public final Client SOURCE;
 
 	// for GAMECOMPLETE packets
 	public final int GSCORE;
 
 	// constructor
 	public Packet(String[] packetArray, Client source) {
+		SOURCE = source;
+
+		// parse packetArray
 		HEADER = packetArray[0];
 		PNAME = packetArray[1].replace("PNAME: ", "");
 		SESSIONID = packetArray[2].replace("SESSIONID: ", "");
