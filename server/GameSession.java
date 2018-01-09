@@ -29,16 +29,16 @@ public class GameSession extends PacketListener {
 	public GameSession(MinigameServer parent, Client host) {
 		this.parent = parent;
 
-		// add host
-		this.host = host;
-		addClient(host);
-
 		// make randomizer
 		r = new Random();
 
 		// init lists
 		clients = new ArrayList<Client>();
 		scoreboard = new HashMap<String,Integer>();
+
+		// add host
+		this.host = host;
+		addClient(host);
 
 		// generate session ID
 		sessionID = genSessionID();

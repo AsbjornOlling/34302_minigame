@@ -9,8 +9,10 @@ public class Mediator {
 
 	private ArrayList<InternalPacketListener> listeners;
 
-	// constructor
+	// private constructor to avoid instantiation
 	private Mediator() {
+		// init arraylist
+		listeners = new ArrayList<InternalPacketListener>();
 	} // constructor
 
 
@@ -28,8 +30,12 @@ public class Mediator {
 
 	// construct a new packet and send to all valid listners
 	public void sendPacket(Packet pck) {
+		// make clone of listners list (avoid concurrent modification)
+		ArrayList<InternalPacketListener> listenersClone;
+		listenersClone = new ArrayList<>(listeners);
+
 		// loop through all listeners
-		for (InternalPacketListener listener : listeners) {
+		for (InternalPacketListener listener : listenersClone) {
 			// reset czech vars
 			boolean validHeader = false;
 			boolean validID = false;
