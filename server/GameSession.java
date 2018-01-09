@@ -52,7 +52,8 @@ public class GameSession extends PacketListener {
 	// receive packets from mediator
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER == "SESSIONCONNECT") {
-			// TODO find client based on pName
+			// TODO find client somehow
+			// maybe based on a pname through a bigger hashmap?
 			Client c;
 			addClient(c);
 		}
@@ -60,7 +61,7 @@ public class GameSession extends PacketListener {
 
 
 	// add client to lists
-	// triggered by SESSIONCONNECT
+	// triggered by SESSIONCONNECT packet
 	private void addClient(Client client) {
 		if (inLobby) {
 			clients.add(client);
@@ -88,8 +89,4 @@ public class GameSession extends PacketListener {
 		}
 		return sessionID;
 	} // genSessionID
-
-	// try to connect to session
-	public void sessionConnect(Client client) {
-	} // sessionConnect
 } // GameSession

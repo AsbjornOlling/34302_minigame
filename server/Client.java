@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.net.ServerSocket;
 import java.nio.file.*;
 
-public class Client implements Runnable {
+public class Client extends PacketListener implements Runnable {
 	// not really direct parent but whatevs DUDE
 	MinigameServer parent;
 
@@ -13,9 +13,7 @@ public class Client implements Runnable {
 	Socket clientSocket;
 	ClientIn in;
 	ClientOut out;
-
-	// client info
-	String pName;
+	String pName; // player info
 
 	// constructor
 	public Client (MinigameServer parent, Socket clientSocket) {
@@ -31,28 +29,32 @@ public class Client implements Runnable {
 		out = new ClientOut(clientSocket);
 		Thread outThread = new Thread(out);
 		outThread.start(); //*/
+
+		// add to mediator
+		String[] hdrs = {"SESSIONCONNECT"};
+		Mediator.getInstance().addListener(this, hdrs, "ALL");
 	} //Client
 
 
-	// wait for first packet to arrive
-	// then hand over client to a session
+	// pass packets to mediator
 	public void run() {
-		// run until fist packet received
 		boolean shouldRun = true;
 		while (shouldRun) {
-
-			// if the first packet is received
-			// this only works with .toArray().length and not with just .size()
+			// only works with .toArray().length, and NOT with .size()
 			if (in.packetQueue.toArray().length != 0) { 
-				System.out.println("FIRST PACKET FROM A CLIENT");
 				String[] packet = in.getNextPacket();
-
-				// connect to session
-				sessionConnect(packet);
-				shouldRun = false;
+				Mediator.getInstance().sendPacket(packet);
 			} // fi
 		} // loop
 	} // run()
+
+
+	// receive packet from mediator
+	public void recvPacket(Packet pck) {
+		if (pck.HEADER.equals("SESSIONCONNECT")) {
+			// do sOMETHING
+		}
+	} // recvPacket
 
 
 	// join a session based on session id
