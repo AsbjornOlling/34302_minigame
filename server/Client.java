@@ -133,16 +133,57 @@ class ClientIn implements Runnable {
 
 // concurrent output writer for Client
 class ClientOut implements Runnable {
-// TODO actually write this class
+	ArrayList<String[]> packetQueue;
+
+	private PrintWriter writer;
+
 
 	// constructor
 	public ClientOut(Socket clientSocket) {
 		// make printWriter object on clientSocket
+		try { writer = new PrintWriter(clientSocket.getOutputStream()); }
+		catch (Exception e) {
+			System.out.println("ERROR: Could not open output printWriter.");
+		}
+
+		// init list
+		packetQueue = new ArrayList<String[]>();
 	} // constructor
 
 
 	// thread loop
 	public void run() {
-		// write any queued packets
-	} // thread loop
+		boolean shouldRun = true;
+		while (shouldRun) {
+			// write any queued packets
+			if (packetQueue.size() != 0) {
+				sendNextPacket();
+			}
+		} // thread loop
+	} // run()
+
+	
+	// extract a packet and send to client
+	private void sendNextPacket() {
+		String[] packet = packetQueue.get(0);
+		packetQueue.remove(packet);
+		sendPacket(packet);
+	} // sendNextPacket()
+
+
+	// send a packet to client
+	private void sendPacket(String[] packet) {
+		// write line-by-line
+		for (int i = 0; i < packet.length; i++) {
+			String line = packet[0];
+			writer.print(line);
+		}
+		writer.flush();
+	} // sendPacket
+
+
+	// add a packet to the queue
+	public void queuePacket(String[] packet) {
+		packetQueue.add(packet);
+	} // queuePacket
 } // ClientOut
