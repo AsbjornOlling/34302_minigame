@@ -58,8 +58,9 @@ public class Client extends PacketListener implements Runnable {
 				&& pck.SOURCE == this) {
 			// set new name
 			this.pName = pck.PNAME;
+
+			// make new session
 			if (pck.SESSIONID.equals("NONE")) {
-				// make new session
 				GameSession newsession = new GameSession(parent, this);
 			}
 		}
