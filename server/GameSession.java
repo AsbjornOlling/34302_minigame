@@ -50,10 +50,6 @@ public class GameSession extends PacketListener {
 		scoreboard = new HashMap<String,Integer>();
 		gamesList = new Integer[gameLength];
 
-		// add host
-		this.host = host;
-		addClient(host);
-
 		// generate session ID
 		sessionID = genSessionID();
 		System.out.println("SESSION MADE: "+sessionID);
@@ -64,6 +60,10 @@ public class GameSession extends PacketListener {
 		String[] hdrs = {"SESSIONCONNECT", 
 										 "GAMECOMPLETE"};
 		Mediator.getInstance().addListener(this, hdrs, sessionID);
+
+		// add host
+		this.host = host;
+		addClient(host);
 
 		// TODO generate gamesList
 	} // constructor
@@ -85,6 +85,8 @@ public class GameSession extends PacketListener {
 	// confirm that the client joined
 	// and send player the gamesList
 	private void sendSessionJoined(Client c) {
+		System.out.println("SENDING SESSIONJOINED TO " + c.pName);
+
 		// make copy of protocol text
 		String[] packet = SESSIONJOINED.clone();
 

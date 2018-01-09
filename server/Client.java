@@ -55,10 +55,13 @@ public class Client extends PacketListener implements Runnable {
 	// receive packet from mediator
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONCONNECT") 
-				&& pck.SOURCE == this
-				&& pck.SESSIONID.equals("NONE")) {
-			// make new session
-			GameSession newsession = new GameSession(parent, this);
+				&& pck.SOURCE == this) {
+			// set new name
+			this.pName = pck.PNAME;
+			if (pck.SESSIONID.equals("NONE")) {
+				// make new session
+				GameSession newsession = new GameSession(parent, this);
+			}
 		}
 	} // recvPacket
 
@@ -171,7 +174,7 @@ class ClientOut implements Runnable {
 	} // sendNextPacket()
 
 
-	// send a packet to client
+	// send a packet to the client
 	private void sendPacket(String[] packet) {
 		// write line-by-line
 		for (int i = 0; i < packet.length; i++) {
