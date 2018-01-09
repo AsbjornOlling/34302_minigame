@@ -10,7 +10,7 @@
 import java.util.*;
 import java.io.*;
 
-public class GameSession {
+public class GameSession extends PacketListener {
 	MinigameServer parent;
 
 	Random r; // randomizer
@@ -39,11 +39,39 @@ public class GameSession {
 		sessionID = genSessionID();
 		System.out.println("SESSION MADE: "+sessionID);
 
-		// put session into main session register
+		// put into main session register
 		parent.sessions.put(sessionID, this);
+		// add to mediator
+		String[] hdrs = {"SESSIONCONNECT"};
+		Mediator.getInstance().addListener(this, hdrs, sessionID);
 
-		// TODO make gamesList
+		// TODO generate gamesList
 	} // constructor
+
+	
+	// receive packets from mediator
+	public void recvPacket(Packet pck) {
+		if (pck.HEADER == "SESSIONCONNECT") {
+			// TODO find client based on pName
+			Client c;
+			addClient(c);
+		}
+	} // recvPacket
+
+
+	// add client to lists
+	// triggered by SESSIONCONNECT
+	private void addClient(Client client) {
+		if (inLobby) {
+			clients.add(client);
+			scoreboard.put(client.pName, 0);
+
+			System.out.println("PLAYER " + client.pName 
+												 + "JOINED SESSION " + sessionID);
+		} else {
+			System.out.println("SESSION NOT JOINABLE");
+		}
+	} // addClient
 
 
 	// generate session ID from wordlist
@@ -61,17 +89,7 @@ public class GameSession {
 		return sessionID;
 	} // genSessionID
 
-
 	// try to connect to session
 	public void sessionConnect(Client client) {
-		if (inLobby) {
-			clients.add(client);
-			scoreboard.put(client.pName, 0);
-			System.out.println("PLAYER " + client.pName + "JOINED SESSION " + sessionID);
-		} else {
-			// game in progress
-			// tell user to fuck off
-		}
 	} // sessionConnect
-
 } // GameSession
