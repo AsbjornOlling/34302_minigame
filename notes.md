@@ -47,7 +47,9 @@ END
 GAMECOMPLETE
 PNAME: dinmor
 GSCORE: *tal mellem 0 og 100*
+SESSIONSID: ab78qz 
 END
+
 
 *Fra server*
 
