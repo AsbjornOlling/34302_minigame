@@ -26,27 +26,57 @@ public class Mediator {
 	} // addlistener
 
 
+	// construct a new packet and send to all valid listners
+	public void sendPacket(String[] packet) {
+		// construct packet
+		Packet pck = new Packet(packet);
+		
+		// loop through all listeners
+		for (InternalPacketListener listener : listeners) {
+			// reset czech vars
+			boolean validHeader = false;
+			boolean validID = false;
+
+			// check if header in listeners list of accepted headers
+			for (String header : listener.acceptHeaders) {
+				if (pck.HEADER.equals(header)) {
+					validHeader = true;
+				}
+			} // header-czech
+
+			// check if session ID allowed
+			if (listener.acceptsID.equals("ALL") || 
+					listener.acceptsID.equals(pck.SESSIONID)) {
+				validID = true;
+			} // sID-czech
+
+			// send package if valid
+			if (validHeader && validID) {
+				listener.sendPacket(pck);
+			} 
+		} // listeners loop
+	} // sendPack
 } // Mediator
 
 
 // Object to store in mediator arraylist
 class InternalPacketListener {
 	PacketListener listener;	// the listener object
-	String[] headers; 	// types of packets to accept
-	String sessionID; 	// session ID to accept packets for (can be ALL)
+	String[] acceptHeaders;	 	// types of packets to accept
+	String acceptsID; 	// session ID to accept packets for (can be ALL)
 
 	// constr
 	public InternalPacketListener(PacketListener listener, 
 																String[] headers, 
 																String sessionID) {
 		this.listener = listener;
-		this.headers = headers;
-		this.sessionID = sessionID;
+		this.acceptHeaders = headers;
+		this.acceptsID = sessionID;
 	} // constructor
 
 
 	// notify listener of packet
-	public void sendPack(String[] packet) {
-		listener.recvPacket(packet);
+	public void sendPacket(Packet pck) {
+		listener.recvPacket(pck);
 	} //sendPack
 } // PacketListener
