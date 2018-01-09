@@ -3,6 +3,7 @@
  * Minigames Server
  *
  * Mainly for instantiating the different main objects
+ *
  */
 
 import java.io.*;
@@ -32,9 +33,6 @@ public class MinigameServer {
 		newConnects = new Listener(this);
 		Thread cThread = new Thread(newConnects);
 		cThread.start();
-
-		// make a session - just for testing
-		// GameSession s = new GameSession(this);
 	} // constructor
 
 
@@ -54,9 +52,7 @@ public class MinigameServer {
 	} // loadWordList
 
 
-	// main
 	public static void main(String[] args) {
 		MinigameServer serverInstance = new MinigameServer();
-
 	} // Main
 } // Class

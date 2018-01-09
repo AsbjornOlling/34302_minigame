@@ -42,12 +42,12 @@ public class Client implements Runnable {
 		while (shouldRun) {
 
 			// if the first packet is received
-			// this only works by converting to array, not just .size()
+			// this only works with .toArray().length and not with just .size()
 			if (in.packetQueue.toArray().length != 0) { 
 				System.out.println("FIRST PACKET FROM A CLIENT");
+				String[] packet = in.getNextPacket();
 
 				// connect to session
-				String[] packet = in.getNextPacket();
 				sessionConnect(packet);
 				shouldRun = false;
 			} // fi

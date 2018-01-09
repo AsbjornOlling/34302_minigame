@@ -1,0 +1,6 @@
+/*
+ * Mediator class
+ */
+
+
+public class 
