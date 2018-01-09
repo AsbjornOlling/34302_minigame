@@ -15,17 +15,17 @@ public class GameSession extends PacketListener {
 	Random r; // randomizer
 
 	private final String[] SESSIONJOINED = {
-		"SESSIONJOINED",
+		"SESSIONJOINED\r\n",
 		"GAMES: ",
 		"SESSIONID: ",
-		"END"
+		"END\r\n"
 	};
 
 	private final String[] SCOREUPDATE = {
-		"SCOREUPDATE",
+		"SCOREUPDATE\r\n",
 		"PNAME: ",		// repeat these two lines for number of players
 		"PSCORE: ",		// repeat these two lines for number of players
-		"END"
+		"END\r\n"
 	};
 
 	Client host;												// creator of the session
@@ -82,14 +82,16 @@ public class GameSession extends PacketListener {
 	} // recvPacket
 
 
+	// confirm that the client joined
+	// and send player the gamesList
 	private void sendSessionJoined(Client c) {
 		// make copy of protocol text
 		String[] packet = SESSIONJOINED.clone();
 
 		// add gameslist
-		packet[1] += gamesList;
+		packet[1] += gamesList + "\r\n";
 		// add sessionID
-		packet[2] += sessionID;
+		packet[2] += sessionID + "\r\n";
 
 		// queue packet for sending
 		c.out.queuePacket(packet);

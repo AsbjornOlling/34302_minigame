@@ -175,7 +175,7 @@ class ClientOut implements Runnable {
 	private void sendPacket(String[] packet) {
 		// write line-by-line
 		for (int i = 0; i < packet.length; i++) {
-			String line = packet[0];
+			String line = packet[i];
 			writer.print(line);
 		}
 		writer.flush();
