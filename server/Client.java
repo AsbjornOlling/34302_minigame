@@ -43,7 +43,8 @@ public class Client extends PacketListener implements Runnable {
 			// only works with .toArray().length, and NOT with .size()
 			if (in.packetQueue.toArray().length != 0) { 
 				String[] packet = in.getNextPacket();
-				Mediator.getInstance().sendPacket(packet);
+				Packet pck = new Packet(packet, this);
+				Mediator.getInstance().sendPacket(pck);
 			} // fi
 		} // loop
 	} // run()
