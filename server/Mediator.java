@@ -14,35 +14,39 @@ public class Mediator {
 	} // constructor
 
 
-	// register a listener with headers to listen for
-	public void addListener(Object o, String[] headers, String sID) {
-		listeners.add(new InternalPacketListener(o, headers, sID));
-	} // addlistener
-
-
 	// return the mediator instance
 	public static Mediator getInstance() {
 		return instance;
 	} // getInstace
+
+
+	// register a listener with headers to listen for
+	public void addListener(PacketListener l, String[] hdrs, String sID) {
+		listeners.add(new InternalPacketListener(l, hdrs, sID));
+	} // addlistener
+
+
 } // Mediator
 
 
 // Object to store in mediator arraylist
 class InternalPacketListener {
-	PacketListener obj;				// the listener object
-	String[] headers; // types of packets to accept
-	String sessionID; // session ID to accept packets for (can be ALL)
+	PacketListener listener;	// the listener object
+	String[] headers; 	// types of packets to accept
+	String sessionID; 	// session ID to accept packets for (can be ALL)
 
 	// constr
-	public InternalPacketListener(Object o, String[] headers, String sID) {
-		this.obj = o;
+	public InternalPacketListener(PacketListener listener, 
+																String[] headers, 
+																String sessionID) {
+		this.listener = listener;
 		this.headers = headers;
-		this.sessionID = sID;
+		this.sessionID = sessionID;
 	} // constructor
 
 
 	// notify listener of packet
 	public void sendPack(String[] packet) {
-		obj.getPack(packet);
+		listener.recvPacket(packet);
 	} //sendPack
 } // PacketListener

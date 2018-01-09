@@ -1,3 +1,3 @@
 public abstract class PacketListener {
-	public abstract void recvPacket();
+	public abstract void recvPacket(String[] packet);
 }
