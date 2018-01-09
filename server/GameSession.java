@@ -14,14 +14,14 @@ public class GameSession extends PacketListener {
 
 	Random r; // randomizer
 
-	String[] SESSIONJOINED = {
+	private final String[] SESSIONJOINED = {
 		"SESSIONJOINED",
 		"GAMES: ",
 		"SESSIONID: ",
 		"END"
 	};
 
-	String[] SCOREUPDATE = {
+	private final String[] SCOREUPDATE = {
 		"SCOREUPDATE",
 		"PNAME: ",		// repeat these two lines for number of players
 		"PSCORE: ",		// repeat these two lines for number of players
@@ -82,6 +82,20 @@ public class GameSession extends PacketListener {
 	} // recvPacket
 
 
+	private void sendSessionJoined(Client c) {
+		// make copy of protocol text
+		String[] packet = SESSIONJOINED.clone();
+
+		// add gameslist
+		packet[1] += gamesList;
+		// add sessionID
+		packet[2] += sessionID;
+
+		// queue packet for sending
+		c.out.queuePacket(packet);
+	} // sendSessionJoined
+
+
 	// add client to lists
 	// triggered by SESSIONCONNECT packet
 	public void addClient(Client client) {
@@ -92,7 +106,8 @@ public class GameSession extends PacketListener {
 			System.out.println("PLAYER " + client.pName 
 												 + "JOINED SESSION " + sessionID);
 
-			// TODO sessionjoin packet
+			// send confirmation to player
+			sendSessionJoined(client);
 		} else {
 			System.out.println("SESSION NOT JOINABLE");
 		}
