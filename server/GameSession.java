@@ -63,7 +63,7 @@ public class GameSession extends PacketListener {
 
 		// add host
 		this.host = host;
-		addClient(host);
+		addClient(host, host.pName);
 		// TODO generate gamesList
 	} // constructor
 
@@ -73,14 +73,15 @@ public class GameSession extends PacketListener {
 		if (pck.HEADER.equals("SESSIONCONNECT")
 				&& pck.SESSIONID.equals(this.sessionID)) {
 			// try to add client
-			addClient(pck.SOURCE);
+			addClient(pck.SOURCE, pck.PNAME);
 		} // SESSIONCONNECT
 		else if (pck.HEADER.equals("GAMECOMPLETE")
 						 && pck.SESSIONID.equals(this.sessionID)) {
 			System.out.println("INTERPRETING GAMECOMPLETE PACKET");
 
 			// log points
-			int newPoints = scoreboard.get(pck.PNAME) + pck.GSCORE;
+			int newPoints = scoreboard.get(pck.PNAME);
+			newPoints += pck.GSCORE;
 			scoreboard.put(pck.PNAME, newPoints);
 										 
 			// udpate client scoreboards
@@ -121,9 +122,8 @@ public class GameSession extends PacketListener {
 		// make copy of protocol text
 		String[] packet = SESSIONJOINED.clone();
 
-		// add gameslist
+		// add session properties
 		packet[1] += gamesList + "\r\n";
-		// add sessionID
 		packet[2] += sessionID + "\r\n";
 
 		// queue packet for sending
@@ -133,7 +133,7 @@ public class GameSession extends PacketListener {
 
 	// add client to lists
 	// triggered by SESSIONCONNECT packet
-	public void addClient(Client client) {
+	public void addClient(Client client, String name) {
 		if (inLobby) {
 			System.out.println("PLAYER: " + client.pName +
 												 " JOINED SESSION: " + sessionID);
@@ -141,7 +141,7 @@ public class GameSession extends PacketListener {
 			// add to list of clients
 			clients.add(client);
 			// init scoreboard
-			scoreboard.put(client.pName, 0);
+			scoreboard.put(name, 0);
 			// send confirmation to player
 			sendSessionJoined(client);
 		} else {

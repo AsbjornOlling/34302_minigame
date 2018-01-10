@@ -30,7 +30,7 @@ public class Packet {
 
 			// parse packetArray
 			HEADER = packetArray[0];
-			PNAME = packetArray[1].replace("PNAME: ", "");
+	 		PNAME = packetArray[1].replace("PNAME: ", "");
 			SESSIONID = packetArray[2].replace("SESSIONID: ", "");
 
 			// parse gamescore
