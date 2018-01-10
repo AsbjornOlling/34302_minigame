@@ -44,9 +44,6 @@ public class GameHandler extends JPanel {
 	// send gameComplete message
 	// and load the next game
 	public void gameComplete(int score) {
-		// send GAMECOMPLETE message to server
-		parent.server.gameComplete(score);
-
 		// load new game
 		loadGame(new ClickTenTimes(this));
 	} // gameComplete
@@ -90,7 +87,6 @@ class ClickTenTimes extends Game {
 	JButton tenClickButton;
 	Integer clicksLeft;
 	long startTime;
-
 
 	// constructor 
 	public ClickTenTimes(GameHandler handler) {
@@ -175,7 +171,9 @@ class ClickTenTimes extends Game {
 
 
 
+
    /*\
+   ***
    ***
    *** 
    ***

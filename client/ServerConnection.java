@@ -14,6 +14,20 @@ import java.io.PrintWriter;
 public class ServerConnection {
 	MinigameClient parent;
 
+	private final String[] GAMECOMPLETE = {
+		"GAMECOMPLETE\r\n",
+		"PNAME: ",
+		"SESSIONID: ",
+		"END\r\n"
+	};
+
+	private final String[] SESSIONCONNECT = {
+		"SESSIONCONNECT\r\n",
+		"PNAME: ",
+		"SESSIONID: ",
+		"END\r\n"
+	};
+
 	// server address
 	private final String HOST = "localhost";
 	private final int PORT = 6666;
@@ -27,56 +41,47 @@ public class ServerConnection {
 	public ServerConnection(MinigameClient parent) {
 		this.parent = parent;
 
+		// open connection to server
+		try { connection = new Socket(HOST, PORT); } catch (Exception ex) {
+			System.out.println("ERROR: COULD NOT CONNECT TO SERVER");
+		}
+
+		// output object
 		out = new ServerOut(connection);
 		Thread outThread = new Thread(out);
 		outThread.start();
 
+		// input object
 		in = new ServerIn(connection);
 		Thread inThread = new Thread(in);
 		inThread.start();
-
 	} // constructor
 
 
-	// TODO FUCK ME OVER
-	// init connection objects
-	public void connect() {
-		// socket
-		try { // connect to server
-			connection = new Socket(HOST, PORT);
-		} catch (Exception ex) {
-			System.out.println("ERROR: COULD NOT CONNECT TO SERVER");
-		} 
-		
-		try { // input reader and output writer
-			in = new BufferedReader(
-					 new InputStreamReader(connection.getInputStream()));
-		} catch (Exception ex) {
-			// tell the user that he dun goofd
-		}
-	} // connect
+	// send GAMECOMPLETE message
+	public void sendGameComplete(int score) {
+		// make copy of packet template
+		String[] packet = GAMECOMPLETE.clone();
+
+		// add pName
+		// add sessionID
+		// add gamescore
+	} // GAMECOMPLETE
 
 
-	// just send one string immediately
-	// mainly for testing
-	public void sendString(String string) {
-		out.print(string+"\r\n");
-		out.flush();
-	} // sendString
+	// SESSIONCONNECT message
+	public void sendSessionConnect() {
+		// make copy of packet template
+		String[] packet = GAMECOMPLETE.clone();
 
+		// add pName
+		// add sessionID
+	} // SESSIONCONNECT
 
-	// send gameComplete message
-	public void gameComplete(int score) {
-		// TODO construct packet here
-		out.print("GAMECOMPLETE\r\n");
-		out.print("PNAME: " + parent.game.pName + "\r\n");
-		out.print("GSCORE: " + score + "\r\n");
-		out.print("END" + "\r\n");
-		out.flush();
-	} // gameComplete
 } // class
 
 
+// object to send info to server
 class ServerOut implements Runnable {
 	private PrintWriter writer;	
 	ArrayList<String[]> packetQueue;
@@ -84,7 +89,10 @@ class ServerOut implements Runnable {
 	// cosntructor
 	public ServerOut(Socket s) {
 		// printwriter to write to server	
-		writer = new PrintWriter(s.getOutputStream());
+		try { writer = new PrintWriter(s.getOutputStream()); } 
+		catch (Exception e) {
+			System.out.println("ERROR: Could not open output writer.");
+		}
 		// queue of packets to send
 		packetQueue = new ArrayList<String[]>();
 	} // constructor
