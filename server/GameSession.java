@@ -77,9 +77,35 @@ public class GameSession extends PacketListener {
 		}
 		else if (pck.HEADER.equals("GAMECOMPLETE")
 						 && pck.SESSIONID.equals(this.sessionID)) {
-			// TODO broadcastScore()
+			// TODO log points
+			scoreboard.put(pck.PNAME, pck.GSCORE);
+			broadcastScoreUpdate();
 		}
 	} // recvPacket
+
+
+	// broadcast scoreboard to all players
+	private void broadcastScoreUpdate() {
+		System.out.println("BROADCASTING NEW SCOREBOARD");
+
+		// start making new packet
+		ArrayList<String> packetList = new ArrayList<String>();
+		packetList.add(SCOREUPDATE[0]);
+
+		// for each entry in the scoreboard
+		for (Client c : clients) {
+			// add PNAME, SCORE lines
+			packetList.add(SCOREUPDATE[1] + c.pName + "\r\n");
+			packetList.add(SCOREUPDATE[2] + scoreboard.get(c.pName) + "\r\n");
+		} // loop
+		packetList.add(SCOREUPDATE[3]); // END
+
+		// make final packet and queue
+		String[] packet = packetList.toArray(new String[packetList.size()]);
+		for (Client c : clients) {
+			c.out.queuePacket(packet);
+		} // loop
+	} // broadcastScoreboard
 
 
 	// confirm that the client joined
@@ -104,14 +130,15 @@ public class GameSession extends PacketListener {
 	// triggered by SESSIONCONNECT packet
 	public void addClient(Client client) {
 		if (inLobby) {
+			// add to list of clients
 			clients.add(client);
+			// init scoreboard
 			scoreboard.put(client.pName, 0);
+			// send confirmation to player
+			sendSessionJoined(client);
 
 			System.out.println("PLAYER " + client.pName 
 												 + "JOINED SESSION " + sessionID);
-
-			// send confirmation to player
-			sendSessionJoined(client);
 		} else {
 			System.out.println("SESSION NOT JOINABLE");
 		}
