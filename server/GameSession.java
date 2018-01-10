@@ -56,15 +56,14 @@ public class GameSession extends PacketListener {
 
 		// put into main session register
 		parent.sessions.put(sessionID, this);
+
 		// add to mediator
-		String[] hdrs = {"SESSIONCONNECT", 
-										 "GAMECOMPLETE"};
+		String[] hdrs = {"SESSIONCONNECT", "GAMECOMPLETE"};
 		Mediator.getInstance().addListener(this, hdrs, sessionID);
 
 		// add host
 		this.host = host;
 		addClient(host);
-
 		// TODO generate gamesList
 	} // constructor
 
@@ -73,14 +72,20 @@ public class GameSession extends PacketListener {
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONCONNECT")
 				&& pck.SESSIONID.equals(this.sessionID)) {
+			// try to add client
 			addClient(pck.SOURCE);
-		}
+		} // SESSIONCONNECT
 		else if (pck.HEADER.equals("GAMECOMPLETE")
 						 && pck.SESSIONID.equals(this.sessionID)) {
-			// TODO log points
-			scoreboard.put(pck.PNAME, pck.GSCORE);
+			System.out.println("INTERPRETING GAMECOMPLETE PACKET");
+
+			// log points
+			int newPoints = scoreboard.get(pck.PNAME) + pck.GSCORE;
+			scoreboard.put(pck.PNAME, newPoints);
+										 
+			// udpate client scoreboards
 			broadcastScoreUpdate();
-		}
+		} // GAMECOMPLETE
 	} // recvPacket
 
 
@@ -130,15 +135,15 @@ public class GameSession extends PacketListener {
 	// triggered by SESSIONCONNECT packet
 	public void addClient(Client client) {
 		if (inLobby) {
+			System.out.println("PLAYER: " + client.pName +
+												 " JOINED SESSION: " + sessionID);
+
 			// add to list of clients
 			clients.add(client);
 			// init scoreboard
 			scoreboard.put(client.pName, 0);
 			// send confirmation to player
 			sendSessionJoined(client);
-
-			System.out.println("PLAYER " + client.pName 
-												 + "JOINED SESSION " + sessionID);
 		} else {
 			System.out.println("SESSION NOT JOINABLE");
 		}
@@ -156,7 +161,7 @@ public class GameSession extends PacketListener {
 			if (i + 1 < idLength) {
 				sessionID += " ";
 			}
-		}
+		} // loop
 		return sessionID;
 	} // genSessionID
 } // GameSession

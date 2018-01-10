@@ -63,7 +63,7 @@ public class Client extends PacketListener implements Runnable {
 			if (pck.SESSIONID.equals("NONE")) {
 				GameSession newsession = new GameSession(parent, this);
 			}
-		}
+		} // SESSIONCONNECT
 	} // recvPacket
 
 
@@ -129,7 +129,6 @@ class ClientIn implements Runnable {
 	public String[] getNextPacket() {
 		String[] packet = (String[]) packetQueue.toArray()[0];
 		packetQueue.remove(packet);
-		System.out.println("PULLING PACKET");
 		return packet;
 	} // getNextPacket
 } // ClientIn
@@ -140,7 +139,6 @@ class ClientOut implements Runnable {
 	ArrayList<String[]> packetQueue;
 
 	private PrintWriter writer;
-
 
 	// constructor
 	public ClientOut(Socket clientSocket) {
@@ -159,8 +157,8 @@ class ClientOut implements Runnable {
 	public void run() {
 		boolean shouldRun = true;
 		while (shouldRun) {
-			// write any queued packets
-			if (packetQueue.size() != 0) {
+			// only works with .toArray().length, and NOT with .size()
+			if (packetQueue.toArray().length != 0) { 
 				sendNextPacket();
 			}
 		} // thread loop
@@ -177,6 +175,8 @@ class ClientOut implements Runnable {
 
 	// send a packet to the client
 	private void sendPacket(String[] packet) {
+		System.out.println("SENDING PACKET TO CLIENT");
+
 		// write line-by-line
 		for (int i = 0; i < packet.length; i++) {
 			String line = packet[i];

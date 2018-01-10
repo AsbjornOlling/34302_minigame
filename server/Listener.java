@@ -32,18 +32,20 @@ public class Listener implements Runnable {
 
 	// thread loop
 	public void run() {
-		// wait for new connection
-		// code hangs here for a while
-		try { 
-			clientSocket = serverSocket.accept();
-		} catch (IOException ioEx) {
-			System.out.println("ERROR: Client could not connect to server.");
-		}
+		boolean shouldRun = true;
+		while (shouldRun) {
+			// wait for new connection
+			try { 
+				clientSocket = serverSocket.accept();
+			} catch (IOException ioEx) {
+				System.out.println("ERROR: Client could not connect to server.");
+			}
 
-		// make new client connection
-		Client aClient = new Client (parent, clientSocket);
-		Thread cThread = new Thread(aClient);
-		cThread.start();
-		System.out.println("NEW CLIENT CONNECTION");
+			// make new client connection
+			Client aClient = new Client (parent, clientSocket);
+			Thread cThread = new Thread(aClient);
+			cThread.start();
+			System.out.println("NEW CLIENT CONNECTION");
+		}
 	} // run
 } // Class Listener
