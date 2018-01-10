@@ -21,18 +21,23 @@ public class Packet {
 		// source client
 		SOURCE = source;
 		if (isValid(packetArray)) {
+			// strip \r\n from packet
+			for (int i = 0; i < packetArray.length; i++) {
+				String line = packetArray[i];
+				line = line.replace("\r\n", "");
+				packetArray[i] = line;
+			} 
+
 			// parse packetArray
 			HEADER = packetArray[0];
-			PNAME = packetArray[1].replace("PNAME: ", ""
-													 ).replace("\r\n","");
-			SESSIONID = packetArray[2].replace("SESSIONID: ", ""
-															 ).replace("\r\n","");
+			PNAME = packetArray[1].replace("PNAME: ", "");
+			SESSIONID = packetArray[2].replace("SESSIONID: ", "");
 
 			// parse gamescore
 			if (HEADER.equals("GAMECOMPLETE")) {
-				String score = packetArray[3].replace("GSCORE: ", ""
-		  															).replace("\r\n","");
+				String score = packetArray[3].replace("GSCORE: ", "");
 				GSCORE = Integer.parseInt(score);
+
 				System.out.println("READ GAMESCORE: " + score
 													 + " FROM: " + PNAME);
 			} else { 
@@ -42,7 +47,7 @@ public class Packet {
 			HEADER = "INVALID";
 			PNAME = "INVALID";
 			SESSIONID = "INVALID";
-			GSCORE = 0;
+			GSCORE = -1;
 		}
 	} // constructor
 
