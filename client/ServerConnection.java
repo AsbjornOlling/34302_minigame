@@ -14,13 +14,14 @@ import java.io.PrintWriter;
 public class ServerConnection {
 	MinigameClient parent;
 
+	// packet templates
 	private final String[] GAMECOMPLETE = {
 		"GAMECOMPLETE\r\n",
 		"PNAME: ",
 		"SESSIONID: ",
+		"GSCORE: ",
 		"END\r\n"
 	};
-
 	private final String[] SESSIONCONNECT = {
 		"SESSIONCONNECT\r\n",
 		"PNAME: ",
@@ -59,25 +60,35 @@ public class ServerConnection {
 
 
 	// send GAMECOMPLETE message
-	public void sendGameComplete(int score) {
+	public void sendGameComplete(String pn, String sID, int score) {
 		// make copy of packet template
 		String[] packet = GAMECOMPLETE.clone();
 
 		// add pName
+		packet[1] += pn + "\r\n";
 		// add sessionID
+		packet[2] += sID + "\r\n";
 		// add gamescore
+		packet[3] += score + "\r\n";
+
+		// put packet into send queue
+		out.queuePacket(packet);
 	} // GAMECOMPLETE
 
 
 	// SESSIONCONNECT message
-	public void sendSessionConnect() {
+	public void sendSessionConnect(String pn, String sID) {
 		// make copy of packet template
-		String[] packet = GAMECOMPLETE.clone();
+		String[] packet = SESSIONCONNECT.clone();
 
 		// add pName
+		packet[1] += pn + "\r\n";
 		// add sessionID
-	} // SESSIONCONNECT
+		packet[2] += sID + "\r\n";
 
+		// queue packet for sending
+		out.queuePacket(packet);
+	} // SESSIONCONNECT
 } // class
 
 

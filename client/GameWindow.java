@@ -12,8 +12,9 @@ public class GameWindow extends JFrame implements ActionListener {
 	// parent object
 	MinigameClient parent;
 
-	// layout helper object
+	// layout objects
 	GridBagConstraints cstr;
+	JPanel mainPanel;
 
 	// size parameters
 	public final int GUIWIDTH;
@@ -21,7 +22,7 @@ public class GameWindow extends JFrame implements ActionListener {
 	public final int GAMEWIDTH;
 	public final int PANELWIDTH;
 
-	// constructor
+	// make main elements of the client window
 	public GameWindow(MinigameClient parent) {
 		this.parent = parent;
 		this.GUIWIDTH = parent.GUIWIDTH;
@@ -29,17 +30,22 @@ public class GameWindow extends JFrame implements ActionListener {
 		this.GAMEWIDTH = parent.GAMEWIDTH;
 		this.PANELWIDTH = GUIWIDTH - GAMEWIDTH;
 
-		// content pane layout
+		// init layout stuff
 		getContentPane().setLayout(new GridBagLayout());
 		cstr = new GridBagConstraints();
 
-		// add game to content pane
+		// main content panel
+		mainPanel = new JPanel();
+		mainPanel.setLayout(new GridBagLayout());
 		cstr.gridx = 0;
 		cstr.gridy = 0;
 		cstr.weightx = 1;
 		cstr.weighty = 1;
 		cstr.fill = GridBagConstraints.HORIZONTAL;
-		getContentPane().add(parent.game, cstr);
+		getContentPane().add(mainPanel, cstr);
+
+		// loadGameHandler();
+		loadIdleScreen();
 
 		// make and add right panel
 		JPanel rightPanel = makeRightPanel();
@@ -61,8 +67,23 @@ public class GameWindow extends JFrame implements ActionListener {
 	} // constructor
 
 
+	// load GameHandler instance
+	public void loadGameHandler() {
+		mainPanel.removeAll();
+		mainPanel.add(parent.game);
+	} // loadGameHandler
+
+
+	// create and show idle screen
+	public void loadIdleScreen() {
+		mainPanel.removeAll();
+		mainPanel.add(new IdleScreen(this));
+	} // loadIdleScreen
+
+
 	// right UI panel containing scoreboard, session ID, etc
 	public JPanel makeRightPanel() {
+		// make panel and set layout
 		JPanel rightPanel = new JPanel();
 		rightPanel.setLayout(new GridBagLayout());
 
@@ -98,6 +119,7 @@ public class GameWindow extends JFrame implements ActionListener {
 		return rightPanel;
 	} // make right panel
 
+	// make empty scoreboard (called from makeRightPanel)
 	public JTable makeScoreboard() {
 		TableModel tablemodel = new AbstractTableModel() {
 			public int getColumnCount() { return 2; }
@@ -119,27 +141,57 @@ public class GameWindow extends JFrame implements ActionListener {
 
 // screen to show when not connected to a session
 class IdleScreen extends JPanel implements ActionListener {
+	GameWindow parent;
+	MinigameClient app;
+	private final int WIDTH;
+	private final int HEIGHT;
+
 	private JButton newSession;
 	private JButton joinSession;
 
 	// constructor
-	public IdleScreen() {
+	public IdleScreen(GameWindow parent) {
+		this.parent = parent;
+		this.app = parent.parent;
+		this.WIDTH = parent.GAMEWIDTH;
+		this.HEIGHT = parent.GUIHEIGHT;
+
 		setLayout(new GridLayout(2, 1));
 
 		// new session button
 		newSession = new JButton("Create new session.");
+		newSession.addActionListener(this);
 		add(newSession);
 
 		// join session button
 		joinSession = new JButton("Join an existing session.");
+		joinSession.addActionListener(this);
 		add(joinSession);
 	} // constructor
 
 
 	// event handler
 	public void actionPerformed(ActionEvent e) {
-		// if newSession
-		// if joinSession
+		JButton source = (JButton) e.getSource();
+
+		// if it's either of the buttons
+		if (source == newSession || source == joinSession) {
+			// get player name
+			app.currentPName = JOptionPane.showInputDialog("Name:");
+
+			if (source == newSession) {
+				app.server.sendSessionConnect(app.currentPName, "NONE");
+			} else if (source == joinSession) {
+				// get session ID
+				String sID = JOptionPane.showInputDialog("Enter Session ID:");
+				app.server.sendSessionConnect(app.currentPName, sID);
+			}
+		} // if button
 	} // event handler
 
+
+	// tell the layout manager about size
+	public Dimension getPreferredSize() {
+		return new Dimension(WIDTH, HEIGHT);
+	} // getPreferredSize
 } // IdleScreen

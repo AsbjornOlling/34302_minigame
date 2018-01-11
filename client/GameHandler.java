@@ -15,10 +15,6 @@ public class GameHandler extends JPanel {
 
 	final int WIDTH, HEIGHT;
 
-	// gamestate variables
-	private String pName = "dinmor";
-	private String sessionID = "fuck fuck fuck";
-
 	// constructor
 	public GameHandler(MinigameClient parent) {
 		this.parent = parent;
@@ -186,4 +182,3 @@ class ClickTenTimes extends Game {
    *** 
 /*******\
 \*******/
-

@@ -16,6 +16,10 @@ public class MinigameClient {
 	GameHandler game;
 	ServerConnection server;
 	GameWindow window;
+
+	// gamestate vars
+	String currentPName;
+	String currentSessionID;
 	
 	// constructor
 	public MinigameClient() {
