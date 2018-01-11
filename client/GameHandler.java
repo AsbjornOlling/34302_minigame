@@ -14,7 +14,10 @@ public class GameHandler extends JPanel {
 	MinigameClient parent;
 
 	final int WIDTH, HEIGHT;
-	String pName = "dinmor";
+
+	// gamestate variables
+	private String pName = "dinmor";
+	private String sessionID = "fuck fuck fuck";
 
 	// constructor
 	public GameHandler(MinigameClient parent) {
@@ -29,7 +32,7 @@ public class GameHandler extends JPanel {
 	} // constructor
 
 
-	// display a minigame
+	// initialize a minigame
 	public void loadGame(Game game) {
 		// clear screen and add new game
 		this.removeAll();
@@ -44,6 +47,7 @@ public class GameHandler extends JPanel {
 	// send gameComplete message
 	// and load the next game
 	public void gameComplete(int score) {
+		// sendGameComplete(pName, sessionID, score)
 		// load new game
 		loadGame(new ClickTenTimes(this));
 	} // gameComplete
@@ -83,10 +87,10 @@ abstract class Game extends JPanel implements Runnable, ActionListener {
 
 // ClickTenTimes: A game about a button
 class ClickTenTimes extends Game {
-	boolean shouldRun;
-	JButton tenClickButton;
-	Integer clicksLeft;
-	long startTime;
+	private boolean shouldRun;
+	private JButton tenClickButton;
+	private Integer clicksLeft;
+	private long startTime;
 
 	// constructor 
 	public ClickTenTimes(GameHandler handler) {
@@ -142,8 +146,9 @@ class ClickTenTimes extends Game {
 
 		// check for terminating gamestate
 		if (clicksLeft <= 0) {
+			// exit thread loop
 			shouldRun = false;
-		} 
+		}
 	} // setButtonText
 
 
@@ -168,7 +173,6 @@ class ClickTenTimes extends Game {
 		handler.gameComplete(score);
 	} // finishGame
 } // ButtonGame
-
 
 
 
