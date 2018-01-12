@@ -2,6 +2,8 @@
  * Connection to gameserver
  */
 
+package client;
+
 // small useful things
 import java.util.*;
 

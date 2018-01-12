@@ -2,6 +2,8 @@
  * This file is for non-game UI elements
  */
 
+package client;
+
 // supercomfy gui
 import javax.swing.*;
 import java.awt.*;

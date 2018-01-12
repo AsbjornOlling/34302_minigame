@@ -3,6 +3,8 @@
  * and utilities to load and render games
  */
 
+package client;
+
 import java.util.*;
 
 // gui stuff

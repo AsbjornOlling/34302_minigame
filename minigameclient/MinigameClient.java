@@ -3,6 +3,9 @@
  * master class that handles all the things
  */
 
+package minigameclient;
+import minigameclient.*;
+
 // all the good things
 import java.util.*;
 
@@ -23,13 +26,8 @@ public class MinigameClient {
 	
 	// constructor
 	public MinigameClient() {
-		// game handler object
 		game = new GameHandler(this);
-
-		// init gui
 		window = new GameWindow(this);
-
-		// init ServerConnection
 		server = new ServerConnection(this);
 	} // constructor
 
