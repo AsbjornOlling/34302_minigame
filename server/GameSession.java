@@ -31,7 +31,7 @@ public class GameSession extends PacketListener {
 	Client host;												// creator of the session
 	ArrayList<Client> clients;					// all connected clients
 	HashMap<String,Integer> scoreboard; // a table of points (PName:Points)
-	Integer[] gamesList;								// list of game ids to play
+	String gamesList;								// list of game ids to play
 
 	String sessionID;						// id for players to join
 	int gameLength = 1; 				// number of minigames to play

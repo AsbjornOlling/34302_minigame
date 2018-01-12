@@ -66,7 +66,7 @@ public class Client extends PacketListener implements Runnable {
 		} // SESSIONCONNECT
 	} // recvPacket
 
-
+	// TODO move this to other TODO
 	// terminate connection to client
 	public void closeSocket() {
 		try { clientSocket.close(); } catch (IOException ioEx) {
@@ -133,7 +133,7 @@ class ClientIn implements Runnable {
 	} // getNextPacket
 } // ClientIn
 
-
+// Read TODO for changes here
 // concurrent output writer for Client
 class ClientOut implements Runnable {
 	ArrayList<String[]> packetQueue;
