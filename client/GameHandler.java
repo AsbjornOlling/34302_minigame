@@ -3,7 +3,7 @@
  * and utilities to load and render games
  */
 
-package client;
+package minigame.client;
 
 import java.util.*;
 

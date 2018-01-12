@@ -3,10 +3,10 @@
  * master class that handles all the things
  */
 
-package minigameclient;
-import minigameclient.*;
+package minigame.client;
+import minigame.client.*;
 
-// all the good things
+// std lib imports
 import java.util.*;
 
 public class MinigameClient {

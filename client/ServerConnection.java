@@ -2,9 +2,9 @@
  * Connection to gameserver
  */
 
-package client;
+package minigame.client;
 
-// small useful things
+// std library imports
 import java.util.*;
 
 // networking

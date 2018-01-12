@@ -2,7 +2,7 @@
  * This file is for non-game UI elements
  */
 
-package client;
+package minigame.client;
 
 // supercomfy gui
 import javax.swing.*;
