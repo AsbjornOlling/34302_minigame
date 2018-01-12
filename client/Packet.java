@@ -74,7 +74,7 @@ public class Packet {
 		}
 
 		boolean validEnd;
-		if ( packet[packet.length].equals("END\r\n") ) {
+		if ( packet[packet.length - 1].equals("END\r\n") ) {
 			validEnd = true;
 		} else {
 			validEnd = false;

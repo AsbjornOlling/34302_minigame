@@ -33,6 +33,9 @@ public class MinigameClient extends PacketListener {
 	// packet listener
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONJOINED")) {
+			sessionID = pck.SESSIONID;
+			System.out.println("SESSIONID FROM SERVER:"
+												 + pck.SESSIONID);
 		}
 	} // recvPacket
 
