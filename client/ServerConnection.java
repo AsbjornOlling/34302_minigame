@@ -2,8 +2,6 @@
  * Connection to gameserver
  */
 
-package minigame.client;
-
 // std library imports
 import java.util.*;
 

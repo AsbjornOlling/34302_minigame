@@ -3,13 +3,10 @@
  * master class that handles all the things
  */
 
-package minigame.client;
-import minigame.client.*;
-
 // std lib imports
 import java.util.*;
 
-public class MinigameClient {
+public class MinigameClient extends PacketListener {
 	// some GUI parameters	
 	public final int GUIWIDTH = 1280;
 	public final int GUIHEIGHT = 720;
@@ -29,6 +26,10 @@ public class MinigameClient {
 		window = new GameWindow(this);
 		server = new ServerConnection(this);
 	} // constructor
+
+	// packet listener
+	public void recvPacket(Packet pck) {
+	}
 
 	// main method
 	public static void main(String[] args) {
