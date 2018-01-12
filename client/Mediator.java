@@ -5,9 +5,8 @@
 import java.util.*;
 
 public class Mediator {
-	private static Mediator instance = new Mediator();
-
 	private ArrayList<InternalPacketListener> listeners;
+	private static Mediator instance = new Mediator();
 
 	private Mediator() {
 		listeners = new ArrayList<InternalPacketListener>();
