@@ -1,5 +1,5 @@
 /*
- * GUI for the game client
+ * This file is for non-game UI elements
  */
 
 // supercomfy gui
@@ -8,6 +8,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.table.*;
 
+/*
+ * The main game window.
+ *
+ * This class encapsulates all visible elements.
+ */
 public class GameWindow extends JFrame implements ActionListener {
 	// parent object
 	MinigameClient parent;
@@ -139,7 +144,13 @@ public class GameWindow extends JFrame implements ActionListener {
 } // GameWindow
 
 
-// screen to show when not connected to a session
+/*
+ * Panel that shows when the player is not in session.
+ *
+ * Contains two buttons:
+ * 	newSession creates a new session on the server.
+ * 	joinSession joins a session with a specific name
+ */
 class IdleScreen extends JPanel implements ActionListener {
 	GameWindow parent;
 	MinigameClient app;
@@ -177,15 +188,16 @@ class IdleScreen extends JPanel implements ActionListener {
 		// if it's either of the buttons
 		if (source == newSession || source == joinSession) {
 			// get player name
-			app.currentPName = JOptionPane.showInputDialog("Name:");
+			app.currentPName = JOptionPane.showInputDialog("Your name for this sesson:");
 
-			if (source == newSession) {
-				app.server.sendSessionConnect(app.currentPName, "NONE");
-			} else if (source == joinSession) {
-				// get session ID
-				String sID = JOptionPane.showInputDialog("Enter Session ID:");
-				app.server.sendSessionConnect(app.currentPName, sID);
+			String sID = null;
+			if (source == joinSession) {
+				sID = JOptionPane.showInputDialog("Session ID to join:");
+			} else if (source == newSession) {
+				sID = "NONE";
 			}
+			// send SESSIONCONNECT packet to server.
+			app.server.sendSessionConnect(app.currentPName, sID);
 		} // if button
 	} // event handler
 
