@@ -17,13 +17,14 @@ public class Packet {
 
 	// constructor
 	public Packet(String[] packetArray) {
+		// strip newline symbols
+		for (int i = 0; i < packetArray.length; i++) {
+			String line = packetArray[i];
+			line = line.replace("\r\n", "");
+			packetArray[i] = line;
+		} // strip newline 
+
 		if (isValid(packetArray)) {
-			// strip newline symbols
-			for (int i = 0; i < packetArray.length; i++) {
-				String line = packetArray[i];
-				line = line.replace("\r\n", "");
-				packetArray[i] = line;
-			} // strip newline 
 
 			HEADER = packetArray[0];
 
@@ -74,10 +75,11 @@ public class Packet {
 		}
 
 		boolean validEnd;
-		if ( packet[packet.length - 1].equals("END\r\n") ) {
+		if ( packet[packet.length - 1].equals("END") ) {
 			validEnd = true;
 		} else {
 			validEnd = false;
+			System.out.println("INVALID END READ: " + packet[packet.length-1]);
 		}
 
 		if (validHeader && validEnd) {
