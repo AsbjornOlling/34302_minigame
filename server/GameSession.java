@@ -48,7 +48,6 @@ public class GameSession extends PacketListener {
 		// init lists
 		clients = new ArrayList<Client>();
 		scoreboard = new HashMap<String,Integer>();
-		gamesList = new Integer[gameLength];
 
 		// generate session ID
 		sessionID = genSessionID();
