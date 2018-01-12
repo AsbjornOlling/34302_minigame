@@ -7,17 +7,36 @@
 
 	* MinigameServer: 
 		- main class, indeholder f.eks. et antal sessions
+		- Loader wordlist til gamesessionID
+		- Init sessions og allClients (Hashmaps)
+		- Calls Listener
+	* Listener
+		- Implements Runnable and child of MinigameServer
+		- Makes serversocket and clientsocket
+		- Calls Client
+	* Client
+		- Implements Runnable and child of MinigameServer and extends PacketListener
+		- Contains classes ClientIn and ClientOut
+		- Call Mediator
+		+ ClientIn
+			- Implements Runnable
+			- Read incoming packets
+		+ ClientOut
+			- Implementes Runnable
+			- Sends packets to the client
+	* PacketListener
+		- Make sure that Mediator can see all the methodcall it can make, so mediator can compile
+	* Mediator
+		- Something?
+		+ InternalPacketListener
+			- Something?
 	* GameSession: 
+		- Extends PacketListener
 		- et antal clientconnection objekter
 		- spiller-navne, point-tabeller
 		- en metode til at vælge et antal spil
-	* ClientConnection: 
-		- forbindelse til én spiller
-		- kan lægges ind i en GameSession
-	* Protocol: 
-		- Sørger for at kommunikationen mellem server og client
-		- Sender ACK og holder øje med det samme
-
+	* Packet
+		- Something?
 
 **Client:**
 
