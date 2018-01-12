@@ -25,11 +25,16 @@ public class MinigameClient extends PacketListener {
 		game = new GameHandler(this);
 		window = new GameWindow(this);
 		server = new ServerConnection(this);
+
+		String[] hdrs = {"SESSIONJOINED"};
+		Mediator.getInstance().addListener(this, hdrs);
 	} // constructor
 
 	// packet listener
 	public void recvPacket(Packet pck) {
-	}
+		if (pck.HEADER.equals("SESSIONJOINED")) {
+		}
+	} // recvPacket
 
 	// main method
 	public static void main(String[] args) {
