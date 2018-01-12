@@ -113,7 +113,7 @@ class ServerOut implements Runnable {
 	public void run() {
 		boolean shouldRun = true;
 		while (shouldRun) {
-			// only works with .toArray().length, and NOT with .size()
+			// send packets
 			if (packetQueue.toArray().length != 0) { 
 				sendNextPacket();
 			}
@@ -176,13 +176,20 @@ class ServerIn implements Runnable {
 		boolean shouldRun = true;
 		while (shouldRun) {
 
-			// read any incoming lines
+			// read incoming lines
 			try { dataQueue.add(reader.readLine()); } catch (Exception e) { 
 				System.out.println("ERROR: Could not read input.");
 			}
 
 			// try to split dataQueue into packets
 			parseDataQueue();
+
+			// send to mediator if full packet waiting
+			if (packetQueue.toArray().length != 0) {
+				String[] packet = getNextPacket();
+				Packet pck = new Packet(packet);
+				Mediator.getInstance().sendPacket(pck);
+			}
 		} // thread loop
 	} // run()
 
