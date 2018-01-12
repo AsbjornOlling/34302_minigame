@@ -20,10 +20,9 @@ public class MinigameClient {
 	ServerConnection server;
 	GameWindow window;
 
-	// gamestate vars
-	String currentPName;
-	String currentSessionID;
-	
+	String pName;
+	String sessionID;
+
 	// constructor
 	public MinigameClient() {
 		game = new GameHandler(this);

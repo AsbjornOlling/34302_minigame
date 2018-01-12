@@ -190,7 +190,8 @@ class IdleScreen extends JPanel implements ActionListener {
 		// if it's either of the buttons
 		if (source == newSession || source == joinSession) {
 			// get player name
-			app.currentPName = JOptionPane.showInputDialog("Your name for this sesson:");
+			app.pName = JOptionPane.showInputDialog(
+									"Player name for this sesson:");
 
 			String sID = null;
 			if (source == joinSession) {
@@ -199,7 +200,7 @@ class IdleScreen extends JPanel implements ActionListener {
 				sID = "NONE";
 			}
 			// send SESSIONCONNECT packet to server.
-			app.server.sendSessionConnect(app.currentPName, sID);
+			app.server.sendSessionConnect(app.pName, sID);
 		} // if button
 	} // event handler
 
