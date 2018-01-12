@@ -64,6 +64,7 @@ public class GameSession extends PacketListener {
 		this.host = host;
 		addClient(host, host.pName);
 		// TODO generate gamesList
+		// TODO genGamesList(gameLength);
 	} // constructor
 
 	
@@ -163,4 +164,14 @@ public class GameSession extends PacketListener {
 		} // loop
 		return sessionID;
 	} // genSessionID
+	
+
+	// TODO
+	// generate list of games to play in this session
+	private String genGamesList(int noOfAllGames) {
+		gamesList = "0 1 2 3";
+
+		return gamesList;
+
+	} //genGamesList
 } // GameSession
