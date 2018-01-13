@@ -103,8 +103,11 @@ class ClientIn implements Runnable {
 			try { dataQueue.add(inReader.readLine()); } catch (IOException e) { 
 				System.out.println("ERROR: Could not read input.");
 			}
+
+			if (dataQueue.get(dataQueue.size() - 1) != null) {
 			// try to split dataQueue into packets
 			parseDataQueue();
+			}
 
 			// test connection
 
@@ -114,11 +117,9 @@ class ClientIn implements Runnable {
 
 	// read data queue and split it into discrete packets if possible
 	public void parseDataQueue() {
+		System.out.println("Dette er en test: " + dataQueue.get(dataQueue.size() -1));
 		// if the last bytes are END
-		if (dataQueue.toArray(
-					new String[dataQueue.size()]
-					)[dataQueue.size() - 1]
-				.equals("END")) {
+		if (dataQueue.get(dataQueue.size() - 1).equals("END")) {
 			// move the received packet to packetQueue
 			packetQueue.add(dataQueue.toArray(new String[dataQueue.size()]));
 			dataQueue.clear();
