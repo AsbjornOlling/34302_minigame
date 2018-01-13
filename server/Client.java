@@ -120,7 +120,7 @@ class ClientIn implements Runnable {
 
 	// read data queue and split it into discrete packets if possible
 	public void parseDataQueue() {
-		System.out.println("Dette er en test: " + dataQueue.get(dataQueue.size() -1));
+		System.out.println("CLIENTIN PACKET: " + dataQueue.get(dataQueue.size() -1));
 		// if the last bytes are END
 		if (dataQueue.get(dataQueue.size() - 1).equals("END")) {
 			// move the received packet to packetQueue
