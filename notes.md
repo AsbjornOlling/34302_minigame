@@ -6,6 +6,13 @@
 **Server:**
 
 	* Detect client connection loss, and close sockets if it loses connection
+	* generate and send a space-separated list of games to play (just 1 for now)
+
+**Client:**
+
+	* Test SESSIONJOINED packet handling
+	* Parse SCOREUPDATE packets
+	* Make methods to score load data into table
 
 ## Architecture
 
