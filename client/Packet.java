@@ -13,7 +13,7 @@ public class Packet {
 	public final String HEADER;
 	public final String SESSIONID;
 	public final String GAMES;
-	public HashMap<String,Integer> SCORES;
+	public Object[][] SCOREBOARD;
 
 	// constructor
 	public Packet(String[] packetArray) {
@@ -40,35 +40,67 @@ public class Packet {
 
 			// parse SCOREUPDATE
 			if (HEADER.equals("SCOREUPDATE")) {
-				parseScoreUpdate(packetArray);
+				SCOREBOARD = parseScoreUpdate(packetArray);
 			} else {
 				// nullify unused vars
-				SCORES = null;
+				SCOREBOARD = null;
 			}
 		} // isValid
 		else { // if invalid packet
 			HEADER = null;
 			SESSIONID = null;
 			GAMES = null;
-			SCORES = null;
 		}
 	} // constructor
 
 
 	// pair scores and player names
 	// and sort them by score
-	public void parseScoreUpdate(String[] packet) {
-		SCORES = new HashMap<String,Integer>();
+	public Object[][] parseScoreUpdate(String[] packet) {
+		int noOfEntries = packet.length - 2;
+
+		Object[][] scoreboard = new Object[2][noOfEntries];
+		scoreboard[0] = new String[noOfEntries]; // pnames
+		scoreboard[1] = new Integer[noOfEntries]; // scores
 
 		// loop through player/score pairs
 		for (int i = 1; i < packet.length - 1; i += 2) {
+			// parse name and score
 			String pname = packet[i].replace("PNAME: ","");
-			int pscore = Integer.parseInt(
+			Integer pscore = Integer.parseInt(
 										packet[i+1].replace("PSCORE: ","")
 									 );
-			SCORES.put(pname, pscore);
+
+			// put into scoreboard
+			int entryNo = i - 1;
+			scoreboard[0][entryNo] = pname;
+			scoreboard[1][entryNo] = pscore;
 		} // loop
+
+		// sort the scoreboard
+		Object[][] sortedboard = new Object[2][noOfEntries];
+		for (int i = 0; i < noOfEntries; i++) {
+			// find the highest value from the remaining entries
+			int highestNo = -1;
+			int highestIndex = -1;
+			for (int j = 0; j < noOfEntries; j++) {
+				if ((int) scoreboard[1][j] > highestNo) {
+					highestNo = (int) scoreboard[1][j];
+					highestIndex = j;
+				}
+			}
+			// add the high value to the sorted board
+			sortedboard[0][i] = scoreboard[0][highestIndex];
+			sortedboard[1][i] = scoreboard[1][highestIndex];
+
+			// clear that value from the old scoreboard
+			scoreboard[0][highestIndex] = null;
+			scoreboard[1][highestIndex] = null;
+		} // sorting loop
+
+		return sortedboard;
 	} // parseScoreUpdate
+
 
 	// check packet validity
 	public boolean isValid(String[] packet) {
