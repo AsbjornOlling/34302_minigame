@@ -17,8 +17,11 @@ public class MinigameClient extends PacketListener {
 	ServerConnection server;
 	GameWindow window;
 
+	// game state objects
+	// (are accessed from window and serverconnection
 	String pName;
 	String sessionID;
+	HashMap<String,Integer> scoreboard;
 
 	// constructor
 	public MinigameClient() {
@@ -30,17 +33,21 @@ public class MinigameClient extends PacketListener {
 		Mediator.getInstance().addListener(this, hdrs);
 	} // constructor
 
-	// packet listener
+	// update gamestate from packet info
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONJOINED")) {
 			sessionID = pck.SESSIONID;
 			System.out.println("SESSIONID FROM SERVER:"
 												 + pck.SESSIONID);
+		} else if (pck.HEADER.equals("SCOREUPDATE")) {
+			System.out.println("INFO: Got new scoreboard.");
+			scoreboard = pck.SCORES;
 		}
 	} // recvPacket
 
-	// main method
+
+	// SHA-BANG
 	public static void main(String[] args) {
 		MinigameClient client = new MinigameClient();
-	} // main
+	}
 } // MinigameClient
