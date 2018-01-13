@@ -100,14 +100,17 @@ class ClientIn implements Runnable {
 	public void run() {
 		while (true) {
 			// read any incoming lines
-			try { dataQueue.add(inReader.readLine()); } catch (IOException e) { 
-				System.out.println("ERROR: Could not read input.");
+			String line;
+			try {
+				// add non-null ines read to dataQueue
+				if ( (line = inReader.readLine()) != null) {
+					dataQueue.add(line);
+					parseDataQueue();
+				}
+			} catch (Exception fuckExceptions) {
+				System.out.println("ERROR: Couldn't read line from client.");
 			}
 
-			if (dataQueue.get(dataQueue.size() - 1) != null) {
-			// try to split dataQueue into packets
-			parseDataQueue();
-			}
 
 			// test connection
 
