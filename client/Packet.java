@@ -40,16 +40,7 @@ public class Packet {
 
 			// parse SCOREUPDATE
 			if (HEADER.equals("SCOREUPDATE")) {
-				SCORES = new HashMap<String,Integer>();
-
-				// loop through player/score pairs
-				for (int i = 1; i < packetArray.length - 1; i += 2) {
-					String pname = packetArray[i].replace("PNAME: ","");
-					int pscore = Integer.parseInt(
-								  		  packetArray[i+1].replace("PSCORE: ","")
-											 );
-					SCORES.put(pname, pscore);
-				}
+				parseScoreUpdate(packetArray);
 			} else {
 				// nullify unused vars
 				SCORES = null;
@@ -63,6 +54,21 @@ public class Packet {
 		}
 	} // constructor
 
+
+	// pair scores and player names
+	// and sort them by score
+	public void parseScoreUpdate(String[] packet) {
+		SCORES = new HashMap<String,Integer>();
+
+		// loop through player/score pairs
+		for (int i = 1; i < packet.length - 1; i += 2) {
+			String pname = packet[i].replace("PNAME: ","");
+			int pscore = Integer.parseInt(
+										packet[i+1].replace("PSCORE: ","")
+									 );
+			SCORES.put(pname, pscore);
+		} // loop
+	} // parseScoreUpdate
 
 	// check packet validity
 	public boolean isValid(String[] packet) {
