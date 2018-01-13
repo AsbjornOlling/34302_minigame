@@ -49,7 +49,7 @@ public class GameWindow extends JFrame implements ActionListener {
 		cstr.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(mainPanel, cstr);
 
-		// loadGameHandler();
+		//loadGameHandler();
 		loadIdleScreen();
 
 		// make and add right panel
@@ -129,11 +129,10 @@ public class GameWindow extends JFrame implements ActionListener {
 		TableModel tablemodel = new AbstractTableModel() {
 			public int getColumnCount() { return 2; }
 			public int getRowCount() { 
-				return parent.scoreboard.size(); 
+				return parent.scoreboard[0].length; 
 			}
 			public Object getValueAt(int row, int col) { 
-				// TODO logic here
-				return new Integer(10);
+				return parent.scoreboard[col][row];
 			}
 		};
 		JTable table = new JTable(tablemodel);
