@@ -34,7 +34,7 @@ public class GameSession extends PacketListener {
 	String gamesList;								// list of game ids to play
 
 	String sessionID;						// id for players to join
-	int gameLength = 1; 				// number of minigames to play
+	int gameLength = 8; 				// number of minigames to play
 	boolean inLobby = true;			// allow other players to join
 
 
@@ -63,8 +63,9 @@ public class GameSession extends PacketListener {
 		// add host
 		this.host = host;
 		addClient(host, host.pName);
-		// TODO generate gamesList
-		// TODO genGamesList(gameLength);
+
+		// generate gamesList
+		gamesList = genGamesList();
 	} // constructor
 
 	
@@ -168,10 +169,27 @@ public class GameSession extends PacketListener {
 
 	// TODO
 	// generate list of games to play in this session
-	private String genGamesList(int noOfAllGames) {
-		gamesList = "0 1 2 3";
+	private String genGamesList() {
+		String gamesList = "";
+		int noOfGames = 3;
+		int tempNo;
+		for (int i = 0; i < noOfGames; i++) {
+			tempNo = r.nextInt(gameLength);
 
+			// get a new number, if it was a repeat
+			while (gamesList.contains(tempNo+"")) {
+				tempNo = r.nextInt(gameLength);
+			}
+
+			// add no to string
+			gamesList += tempNo+"";
+
+			// add space if not the alst game
+			if ( i + 1 < noOfGames) {
+				gamesList += " ";
+			}
+		} // loop
+		System.out.println("List of games: "+gamesList);
 		return gamesList;
-
 	} //genGamesList
 } // GameSession
