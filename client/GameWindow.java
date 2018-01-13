@@ -124,13 +124,16 @@ public class GameWindow extends JFrame implements ActionListener {
 		return rightPanel;
 	} // make right panel
 
-	// make empty scoreboard (called from makeRightPanel)
+	// make scoreboard that fetches from hashmap
 	public JTable makeScoreboard() {
 		TableModel tablemodel = new AbstractTableModel() {
 			public int getColumnCount() { return 2; }
-			public int getRowCount() { return 10; }
+			public int getRowCount() { 
+				return parent.scoreboard.size(); 
+			}
 			public Object getValueAt(int row, int col) { 
-				return new Integer(row*col); 
+				// TODO logic here
+				return new Integer(10);
 			}
 		};
 		JTable table = new JTable(tablemodel);

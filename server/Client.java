@@ -42,10 +42,9 @@ public class Client extends PacketListener implements Runnable {
 		while (shouldRun) {
 			// only works with .toArray().length, and NOT with .size()
 			if (in.packetQueue.toArray().length != 0) { 
-				// construct Package
+				// construct packet obj and send to mediator
 				String[] packet = in.getNextPacket();
 				Packet pck = new Packet(packet, this);
-				// send to mediator
 				Mediator.getInstance().sendPacket(pck);
 			} // fi
 		} // loop
@@ -115,8 +114,11 @@ class ClientIn implements Runnable {
 
 	// read data queue and split it into discrete packets if possible
 	public void parseDataQueue() {
-		// if end of message found
-		if (dataQueue.toArray()[dataQueue.size() - 1].equals("END")) {
+		// if the last bytes are END
+		if (dataQueue.toArray(
+					new String[dataQueue.size()]
+					)[dataQueue.size() - 1]
+				.equals("END")) {
 			// move the received packet to packetQueue
 			packetQueue.add(dataQueue.toArray(new String[dataQueue.size()]));
 			dataQueue.clear();
