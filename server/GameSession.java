@@ -60,12 +60,13 @@ public class GameSession extends PacketListener {
 		String[] hdrs = {"SESSIONCONNECT", "GAMECOMPLETE"};
 		Mediator.getInstance().addListener(this, hdrs, sessionID);
 
+		// generate gamesList
+		gamesList = genGamesList();
+		System.out.println("LIST OF GAMES TO PLAY: " + gamesList);
+
 		// add host
 		this.host = host;
 		addClient(host, host.pName);
-
-		// generate gamesList
-		gamesList = genGamesList();
 	} // constructor
 
 	
@@ -122,7 +123,7 @@ public class GameSession extends PacketListener {
 
 		// make copy of protocol text
 		String[] packet = SESSIONJOINED.clone();
-
+		
 		// add session properties
 		packet[1] += gamesList + "\r\n";
 		packet[2] += sessionID + "\r\n";
@@ -189,7 +190,6 @@ public class GameSession extends PacketListener {
 				gamesList += " ";
 			}
 		} // loop
-		System.out.println("List of games: "+gamesList);
 		return gamesList;
 	} //genGamesList
 } // GameSession
