@@ -34,7 +34,7 @@ public class GameSession extends PacketListener {
 	String gamesList;								// list of game ids to play
 
 	String sessionID;						// id for players to join
-	int gameLength = 1; 				// number of minigames to play
+	int gameLength = 8; 				// number of minigames to play
 	boolean inLobby = true;			// allow other players to join
 
 
@@ -60,11 +60,13 @@ public class GameSession extends PacketListener {
 		String[] hdrs = {"SESSIONCONNECT", "GAMECOMPLETE"};
 		Mediator.getInstance().addListener(this, hdrs, sessionID);
 
+		// generate gamesList
+		gamesList = genGamesList();
+		System.out.println("LIST OF GAMES TO PLAY: " + gamesList);
+
 		// add host
 		this.host = host;
 		addClient(host, host.pName);
-		// TODO generate gamesList
-		// TODO genGamesList(gameLength);
 	} // constructor
 
 	
@@ -121,7 +123,7 @@ public class GameSession extends PacketListener {
 
 		// make copy of protocol text
 		String[] packet = SESSIONJOINED.clone();
-
+		
 		// add session properties
 		packet[1] += gamesList + "\r\n";
 		packet[2] += sessionID + "\r\n";
@@ -168,10 +170,26 @@ public class GameSession extends PacketListener {
 
 	// TODO
 	// generate list of games to play in this session
-	private String genGamesList(int noOfAllGames) {
-		gamesList = "0 1 2 3";
+	private String genGamesList() {
+		String gamesList = "";
+		int noOfGames = 3;
+		int tempNo;
+		for (int i = 0; i < noOfGames; i++) {
+			tempNo = r.nextInt(gameLength);
 
+			// get a new number, if it was a repeat
+			while (gamesList.contains(tempNo+"")) {
+				tempNo = r.nextInt(gameLength);
+			}
+
+			// add no to string
+			gamesList += tempNo+"";
+
+			// add space if not the alst game
+			if ( i + 1 < noOfGames) {
+				gamesList += " ";
+			}
+		} // loop
 		return gamesList;
-
 	} //genGamesList
 } // GameSession
