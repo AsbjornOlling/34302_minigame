@@ -106,6 +106,9 @@ class ClientIn implements Runnable {
 			}
 			// try to split dataQueue into packets
 			parseDataQueue();
+
+			// test connection
+
 		} // thread loop
 	} // run()
 
@@ -114,13 +117,11 @@ class ClientIn implements Runnable {
 	public void parseDataQueue() {
 		// if end of message found
 		if (dataQueue.toArray()[dataQueue.size() - 1].equals("END")) {
-			// add packet to packetQueue
+			// move the received packet to packetQueue
 			packetQueue.add(dataQueue.toArray(new String[dataQueue.size()]));
-			// clear dataQueue
 			dataQueue.clear();
 
 			System.out.println("PACKET RECEIVED");
-			System.out.println("NO OF UNPULLED PACKETS: " + packetQueue.size());
 		}	
 	} // parseQueue
 
@@ -138,13 +139,16 @@ class ClientIn implements Runnable {
 class ClientOut implements Runnable {
 	ArrayList<String[]> packetQueue;
 
+	private OutputStream outStream;
 	private PrintWriter writer;
 
 	// constructor
 	public ClientOut(Socket clientSocket) {
 		// make printWriter object on clientSocket
-		try { writer = new PrintWriter(clientSocket.getOutputStream()); }
-		catch (Exception e) {
+		try {
+			outStream = clientSocket.getOutputStream();
+			writer = new PrintWriter(outStream); 
+		} catch (Exception e) {
 			System.out.println("ERROR: Could not open output printWriter.");
 		}
 
