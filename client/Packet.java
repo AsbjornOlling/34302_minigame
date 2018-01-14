@@ -59,6 +59,14 @@ public class Packet {
 	public Object[][] parseScoreUpdate(String[] packet) {
 		int noOfEntries = packet.length - 2;
 
+		// make blank board if no scores got
+		if (noOfEntries < 1) {
+			Object[][] blankBoard = new Object[2][1];
+			blankBoard[0][0] = new Integer(-1);
+			blankBoard[0][1] = new Integer(-2);
+		}
+
+		// make scoreboard
 		Object[][] scoreboard = new Object[2][noOfEntries];
 		scoreboard[0] = new String[noOfEntries]; // pnames
 		scoreboard[1] = new Integer[noOfEntries]; // scores
@@ -67,9 +75,8 @@ public class Packet {
 		for (int i = 1; i < packet.length - 1; i += 2) {
 			// parse name and score
 			String pname = packet[i].replace("PNAME: ","");
-			Integer pscore = Integer.parseInt(
-										packet[i+1].replace("PSCORE: ","")
-									 );
+			Integer pscore = Integer.parseInt(packet[i+1]
+												.replace("PSCORE: ",""));
 
 			// put into scoreboard
 			int entryNo = i - 1;
@@ -81,21 +88,25 @@ public class Packet {
 		Object[][] sortedboard = new Object[2][noOfEntries];
 		for (int i = 0; i < noOfEntries; i++) {
 			// find the highest value from the remaining entries
-			int highestNo = -1;
+			int highestNo = 0;
 			int highestIndex = -1;
 			for (int j = 0; j < noOfEntries; j++) {
 				if ((int) scoreboard[1][j] > highestNo) {
+					System.out.println("SORT "+scoreboard[1][j]+" "+highestNo);
 					highestNo = (int) scoreboard[1][j];
 					highestIndex = j;
 				}
-			}
+			} // high found
+
 			// add the high value to the sorted board
-			sortedboard[0][i] = scoreboard[0][highestIndex];
-			sortedboard[1][i] = scoreboard[1][highestIndex];
+			System.out.println("NAME:"+scoreboard[0][highestIndex]);
+			sortedboard[0][i] = scoreboard[0][highestIndex]; // name
+			System.out.println("SCORE:"+scoreboard[1][highestIndex]);
+			sortedboard[1][i] = scoreboard[1][highestIndex]; // score
 
 			// clear that value from the old scoreboard
-			scoreboard[0][highestIndex] = null;
-			scoreboard[1][highestIndex] = null;
+			scoreboard[0][highestIndex] = "";
+			scoreboard[1][highestIndex] = -1;
 		} // sorting loop
 
 		return sortedboard;
