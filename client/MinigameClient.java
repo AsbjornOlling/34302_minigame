@@ -38,10 +38,11 @@ public class MinigameClient extends PacketListener {
 	// update gamestate from packet info
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONJOINED")) {
+			System.out.println("INFO: Received id " + pck.SESSIONID);
 			sessionID = pck.SESSIONID;
-			System.out.println("SESSIONID FROM SERVER:"
-												 + pck.SESSIONID);
-		} else if (pck.HEADER.equals("SCOREUPDATE")) {
+		} 
+		
+		else if (pck.HEADER.equals("SCOREUPDATE")) {
 			System.out.println("INFO: Got new scoreboard.");
 			scoreboard = pck.SCOREBOARD;
 		}

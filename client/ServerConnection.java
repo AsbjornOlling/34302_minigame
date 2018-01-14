@@ -44,7 +44,7 @@ public class ServerConnection {
 
 		// open connection to server
 		try { connection = new Socket(HOST, PORT); } catch (Exception ex) {
-			System.out.println("ERROR: COULD NOT CONNECT TO SERVER");
+			System.out.println("ERROR: Could not connect to server.");
 		}
 
 		// output object
@@ -131,8 +131,6 @@ class ServerOut implements Runnable {
 
 	// send a packet to the client
 	private void sendPacket(String[] packet) {
-		System.out.println("SENDING PACKET TO CLIENT");
-
 		// write line-by-line
 		for (int i = 0; i < packet.length; i++) {
 			String line = packet[i];
@@ -204,7 +202,7 @@ class ServerIn implements Runnable {
 			// clear dataQueue
 			dataQueue.clear();
 
-			System.out.println("COMPLETE PACKET RECEIVED");
+			System.out.println("INFO: Packet received from server.");
 		}	
 	} // parseQueue
 

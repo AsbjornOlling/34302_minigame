@@ -25,6 +25,7 @@ public class Packet {
 		} // strip newline 
 
 		if (isValid(packetArray)) {
+			System.out.println("INFO: Parsing valid packet.");
 
 			HEADER = packetArray[0];
 
@@ -124,7 +125,7 @@ public class Packet {
 			validHeader = true;
 		} else {
 			validHeader = false;
-			System.out.println("INVALID HEADER READ: " + packet[0]);
+			System.out.println("WARNING: read invalid header: " + packet[0]);
 		}
 
 		boolean validEnd;
@@ -132,7 +133,7 @@ public class Packet {
 			validEnd = true;
 		} else {
 			validEnd = false;
-			System.out.println("INVALID END READ: " + packet[packet.length-1]);
+			System.out.println("WARNING: parsed invalid last line: " + packet[packet.length-1]);
 		}
 
 		if (validHeader && validEnd) {
