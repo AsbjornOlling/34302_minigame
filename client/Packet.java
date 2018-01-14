@@ -58,7 +58,6 @@ public class Packet {
 	// and sort them by score
 	public Object[][] parseScoreUpdate(String[] packet) {
 		int noOfEntries = (packet.length - 2)/2;
-		System.out.println("ENTRIES:"+noOfEntries);
 
 		// make blank board if no scores got
 		if (noOfEntries < 1) {
@@ -98,22 +97,15 @@ public class Packet {
 			int highestNo = -1;
 			int highestIndex = -1;
 			for (int j = 0; j < noOfEntries; j++) {
-				System.out.println("J"+j);
 				if ((int) scoreboard[1][j] > highestNo) {
-					System.out.println("SORT "+scoreboard[1][j]+" "+highestNo);
 					highestNo = (int) scoreboard[1][j];
 					highestIndex = j;
-				} else {
-					System.out.println("NOT HIGHEST: "+ (int) scoreboard[1][j]);
 				}
 
 			} // high found
 
 			// add the high value to the sorted board
-			System.out.println("SORTING");
-			System.out.println("NAME:"+scoreboard[0][highestIndex]);
 			sortedboard[0][i] = scoreboard[0][highestIndex]; // name
-			System.out.println("SCORE:"+scoreboard[1][highestIndex]);
 			sortedboard[1][i] = scoreboard[1][highestIndex]; // score
 
 			// clear that value from the old scoreboard
