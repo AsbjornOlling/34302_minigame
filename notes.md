@@ -10,8 +10,7 @@
 
 **Client:**
 
-	* Test SESSIONJOINED packet handling
-	* Parse SCOREUPDATE packets
+	* Figure out how to make GameWindow a packetListener
 	* Make methods to score load data into table
 
 
