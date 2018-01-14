@@ -74,7 +74,6 @@ public class GameSession extends PacketListener {
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONCONNECT")
 				&& pck.SESSIONID.equals(this.sessionID)) {
-			System.out.println("INFO: " + pck.PNAME + " has joined session " + this.sessionID);
 			addClient(pck.SOURCE, pck.PNAME);
 		} // SESSIONCONNECT
 		else if (pck.HEADER.equals("GAMECOMPLETE")
@@ -96,19 +95,19 @@ public class GameSession extends PacketListener {
 	private void broadcastScoreUpdate() {
 		System.out.println("INFO: Broadcasting scoreboard.");
 
-		// start making new packet
+		// start building new packet
 		ArrayList<String> packetList = new ArrayList<String>();
 		packetList.add(SCOREUPDATE[0]);
 
-		// for each entry in the scoreboard
+		// build meat of the packet
 		for (Client c : clients) {
-			// add PNAME, SCORE lines
 			packetList.add(SCOREUPDATE[1] + c.pName + "\r\n");
 			packetList.add(SCOREUPDATE[2] + scoreboard.get(c.pName) + "\r\n");
 		} // loop
-		packetList.add(SCOREUPDATE[3]); // END
+		// end packet
+		packetList.add(SCOREUPDATE[3]);
 
-		// make final packet and queue
+		// finalize packet and queue for sending
 		String[] packet = packetList.toArray(new String[packetList.size()]);
 		for (Client c : clients) {
 			c.out.queuePacket(packet);
@@ -135,8 +134,7 @@ public class GameSession extends PacketListener {
 	// triggered by SESSIONCONNECT packet
 	public void addClient(Client client, String name) {
 		if (inLobby) {
-			System.out.println("PLAYER: " + client.pName +
-												 " JOINED SESSION: " + sessionID);
+			System.out.println("INFO: " + name + " has joined session " + this.sessionID);
 
 			// add to list of clients
 			clients.add(client);
