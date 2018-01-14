@@ -18,7 +18,7 @@ public class MinigameClient extends PacketListener {
 	GameWindow window;
 
 	// game state objects
-	// (are accessed from window and serverconnection
+	// need to be accessible from both window and serverconnection
 	String pName;
 	String sessionID;
 	Object[][] scoreboard = new Object[2][1];
@@ -31,20 +31,23 @@ public class MinigameClient extends PacketListener {
 		server = new ServerConnection(this);
 
 		// mediator
-		String[] hdrs = {"SESSIONJOINED"};
+		String[] hdrs = {"SESSIONJOINED", "SCOREUPDATE"};
 		Mediator.getInstance().addListener(this, hdrs);
 	} // constructor
+
 
 	// update gamestate from packet info
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONJOINED")) {
-			System.out.println("INFO: Received id " + pck.SESSIONID);
+			System.out.println("INFO: Received ID " + pck.SESSIONID);
 			sessionID = pck.SESSIONID;
 		} 
 		
 		else if (pck.HEADER.equals("SCOREUPDATE")) {
 			System.out.println("INFO: Got new scoreboard.");
+
 			scoreboard = pck.SCOREBOARD;
+			window.updateScoreboard();
 		}
 	} // recvPacket
 

@@ -21,6 +21,9 @@ public class GameWindow extends JFrame implements ActionListener {
 	GridBagConstraints cstr;
 	JPanel mainPanel;
 
+	// scoreboard table data
+	TableModel scoreboardData;
+
 	// size parameters
 	public final int GUIWIDTH;
 	public final int GUIHEIGHT;
@@ -124,9 +127,14 @@ public class GameWindow extends JFrame implements ActionListener {
 		return rightPanel;
 	} // make right panel
 
-	// make scoreboard that fetches from hashmap
+	// update scoreboard table data
+	public void updateScoreboard() {
+		((AbstractTableModel) scoreboardData).fireTableDataChanged();
+	} // updateScoreboard
+
+	// make scoreboard that fetches from parent scoreboard
 	public JTable makeScoreboard() {
-		TableModel tablemodel = new AbstractTableModel() {
+		scoreboardData = new AbstractTableModel() {
 			public int getColumnCount() { return 2; }
 			public int getRowCount() { 
 				return parent.scoreboard[0].length; 
@@ -135,13 +143,16 @@ public class GameWindow extends JFrame implements ActionListener {
 				return parent.scoreboard[col][row];
 			}
 		};
-		JTable table = new JTable(tablemodel);
+
+		JTable table = new JTable(scoreboardData);
 		return table;
 	} // makeScoreboard()
 
 
 	// event handler
 	public void actionPerformed(ActionEvent e) {
+		// TODO handle exit game button
+		// TODO add leave room button
 	} // event handler
 } // GameWindow
 

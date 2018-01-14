@@ -196,13 +196,13 @@ class ServerIn implements Runnable {
 	public void parseDataQueue() {
 		// if end of message found
 		if (dataQueue.toArray()[dataQueue.size() - 1].equals("END")) {
+			System.out.println("INFO: Packet received from server.");
+
 			// add packet to packetQueue
 			packetQueue.add(dataQueue.toArray(new String[dataQueue.size()]));
 
 			// clear dataQueue
 			dataQueue.clear();
-
-			System.out.println("INFO: Packet received from server.");
 		}	
 	} // parseQueue
 
