@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pName="dinmor"
-SID=""
+SID=$1
 
 # send session connect
 echo SESSIONCONNECT
