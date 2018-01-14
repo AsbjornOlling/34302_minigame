@@ -57,7 +57,8 @@ public class Packet {
 	// pair scores and player names
 	// and sort them by score
 	public Object[][] parseScoreUpdate(String[] packet) {
-		int noOfEntries = packet.length - 2;
+		int noOfEntries = (packet.length - 2)/2;
+		System.out.println("ENTRIES:"+noOfEntries);
 
 		// make blank board if no scores got
 		if (noOfEntries < 1) {
@@ -72,16 +73,17 @@ public class Packet {
 		scoreboard[1] = new Integer[noOfEntries]; // scores
 
 		// loop through player/score pairs
-		for (int i = 1; i < packet.length - 1; i += 2) {
+		int entryNo = 0;
+		for (int i = 1; i < noOfEntries; i += 2) {
 			// parse name and score
 			String pname = packet[i].replace("PNAME: ","");
 			Integer pscore = Integer.parseInt(packet[i+1]
 												.replace("PSCORE: ",""));
 
 			// put into scoreboard
-			int entryNo = i - 1;
 			scoreboard[0][entryNo] = pname;
 			scoreboard[1][entryNo] = pscore;
+			entryNo++;
 		} // loop
 
 		// sort the scoreboard
@@ -91,6 +93,7 @@ public class Packet {
 			int highestNo = 0;
 			int highestIndex = -1;
 			for (int j = 0; j < noOfEntries; j++) {
+				System.out.println("J"+j);
 				if ((int) scoreboard[1][j] > highestNo) {
 					System.out.println("SORT "+scoreboard[1][j]+" "+highestNo);
 					highestNo = (int) scoreboard[1][j];
@@ -99,6 +102,7 @@ public class Packet {
 			} // high found
 
 			// add the high value to the sorted board
+			System.out.println("SORTING");
 			System.out.println("NAME:"+scoreboard[0][highestIndex]);
 			sortedboard[0][i] = scoreboard[0][highestIndex]; // name
 			System.out.println("SCORE:"+scoreboard[1][highestIndex]);
