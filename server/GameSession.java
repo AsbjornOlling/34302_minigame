@@ -74,12 +74,12 @@ public class GameSession extends PacketListener {
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SESSIONCONNECT")
 				&& pck.SESSIONID.equals(this.sessionID)) {
-			// try to add client
+			System.out.println("INFO: " + pck.PNAME + " has joined session " + this.sessionID);
 			addClient(pck.SOURCE, pck.PNAME);
 		} // SESSIONCONNECT
 		else if (pck.HEADER.equals("GAMECOMPLETE")
 						 && pck.SESSIONID.equals(this.sessionID)) {
-			System.out.println("INTERPRETING GAMECOMPLETE PACKET");
+			System.out.println("INFO: " + pck.PNAME + " received " + pck.GSCORE + "points.");
 
 			// log points
 			int newPoints = scoreboard.get(pck.PNAME);
@@ -94,7 +94,7 @@ public class GameSession extends PacketListener {
 
 	// broadcast scoreboard to all players
 	private void broadcastScoreUpdate() {
-		System.out.println("BROADCASTING NEW SCOREBOARD");
+		System.out.println("INFO: Broadcasting scoreboard.");
 
 		// start making new packet
 		ArrayList<String> packetList = new ArrayList<String>();
@@ -119,8 +119,6 @@ public class GameSession extends PacketListener {
 	// confirm that the client joined
 	// and send player the gamesList
 	private void sendSessionJoined(Client c) {
-		System.out.println("SENDING SESSIONJOINED TO " + c.pName);
-
 		// make copy of protocol text
 		String[] packet = SESSIONJOINED.clone();
 		
@@ -144,8 +142,12 @@ public class GameSession extends PacketListener {
 			clients.add(client);
 			// init scoreboard
 			scoreboard.put(name, 0);
+
 			// send confirmation to player
 			sendSessionJoined(client);
+
+			// update playerlist (and give new client first playerlist)
+			broadcastScoreUpdate();
 		} else {
 			System.out.println("SESSION NOT JOINABLE");
 		}

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # take sessionID
-sID="cumming yobbo hitler"
+sID="dammit orally buttfucker"
 pName="testusername"
 
 # send session connect
