@@ -50,6 +50,7 @@ public class Mediator {
 		} // listners loop
 	} // sendToClients
 
+
 	// send to non-client listers (i.e. GameSessions)
 	public void sendToOthers(Packet pck) {
 		// make clone of listners list (avoid concurrent modification)
