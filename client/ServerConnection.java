@@ -28,6 +28,12 @@ public class ServerConnection {
 		"SESSIONID: ",
 		"END\r\n"
 	};
+	private final String[] GAMESTART = {
+		"GAMESTART\r\n",
+		"PNAME: ",
+		"SESSIONID: ",
+		"END\r\n"
+	};
 
 	// server address
 	private final String HOST = "localhost";
@@ -89,6 +95,21 @@ public class ServerConnection {
 		// queue packet for sending
 		out.queuePacket(packet);
 	} // SESSIONCONNECT
+
+
+	// GAMESTART message from host
+	public void sendGameStart() {
+		// make copy of packet template
+		String[] packet = GAMESTART.clone();
+
+		// add pName
+		packet[1] += parent.pName + "\r\n";
+		// add sessionID
+		packet[2] += parent.sessionID + "\r\n";
+
+		// queue packet for sending
+		out.queuePacket(packet);
+	} //GAMESTART
 } // class
 
 
