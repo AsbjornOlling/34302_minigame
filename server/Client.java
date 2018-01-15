@@ -47,6 +47,11 @@ public class Client extends PacketListener implements Runnable {
 			if (in.packetQueue.toArray().length != 0) { 
 				// construct packet obj and send to mediator
 				String[] packet = in.getNextPacket();
+				try {
+				Thread.sleep(200);
+				} catch (Exception e) {
+					System.out.println("Failed to sleep in client");
+				}
 				Packet pck = new Packet(packet, this);
 				Mediator.getInstance().sendPacket(pck);
 			} // fi
@@ -176,9 +181,14 @@ class ClientOut implements Runnable {
 	public void run() {
 		while (parent.shouldRun) {
 			// only works with .toArray().length, and NOT with .size()
+				try {
+				Thread.sleep(200);
+				} catch (Exception e) {
+					System.out.println("Failed to sleep in client");
+				}
 			if (packetQueue.toArray().length != 0) { 
 				sendNextPacket();
-			}
+			}  // open output stream
 		} // thread loop
 	} // run()
 
