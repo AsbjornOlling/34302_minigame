@@ -13,7 +13,8 @@ import javax.swing.table.*;
  *
  * This class encapsulates all visible elements.
  */
-public class GameWindow extends JFrame implements ActionListener,PacketListener {
+public class GameWindow extends JFrame 
+												implements ActionListener,PacketListener {
 	// parent object
 	MinigameClient parent;
 
@@ -52,8 +53,8 @@ public class GameWindow extends JFrame implements ActionListener,PacketListener 
 		cstr.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(mainPanel, cstr);
 
-		//loadGameHandler();
-		loadIdleScreen();
+		loadGameHandler();
+		// loadIdleScreen();
 
 		// make and add right panel
 		JPanel rightPanel = makeRightPanel();
@@ -84,7 +85,7 @@ public class GameWindow extends JFrame implements ActionListener,PacketListener 
 		if (pck.HEADER.equals("SCOREUPDATE")) {
 			updateScoreboard();
 		}
-	}
+	} // recvPacket
 
 
 	// load GameHandler instance
