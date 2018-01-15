@@ -22,6 +22,7 @@ public class MinigameClient implements PacketListener {
 	String pName;
 	String sessionID;
 	Object[][] scoreboard = new Object[2][1];
+	boolean host;
 
 	// constructor
 	public MinigameClient() {

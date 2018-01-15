@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class GameHandler extends JPanel {
+public class GameHandler extends JPanel implements PacketListener {
 	MinigameClient parent;
 
 	// window params
@@ -28,12 +28,38 @@ public class GameHandler extends JPanel {
 
 		this.setLayout(new GridLayout(1, 1));
 
-		startPlaying();
+		// add packet listener
+		String[] hdrs = {"SESSIONJOINED"};
+		Mediator.getInstance().addListener(this, hdrs);
+
+		// startPlaying();
+		// showLobbyScreen();
 	} // constructor
 
 
 	// show screen before GAMESTART
 	public void showLobbyScreen() {
+		System.out.println("INFO: Showing lobby screen.");
+		this.removeAll();
+
+		// make lobby panel
+		JPanel lobPanel = new JPanel();
+		lobPanel.setLayout(new BorderLayout());
+	
+		// show startgame button if host
+		if (parent.host) {
+			lobPanel.add(new JLabel("YOU'RE THE HOST", 
+									JLabel.CENTER), BorderLayout.PAGE_START);
+			lobPanel.add(new JButton("START GAME"), BorderLayout.PAGE_END);
+		} else {
+			lobPanel.add(new JLabel("WAITING FOR GAMES TO START", 
+									JLabel.CENTER), BorderLayout.PAGE_START);
+		}
+
+		// add and draw
+		this.add(lobPanel);
+		this.revalidate();
+		this.repaint();
 	} // showLobby
 
 
@@ -48,14 +74,17 @@ public class GameHandler extends JPanel {
 		JPanel GOPanel = new JPanel();
 		GOPanel.setLayout(new GridLayout(h, w));
 		for (int i = 0; i < w*h; i++) {
+			// add empty panel
 			if (i != 4) {
-				// add empty panel
 				this.add(new JPanel());
-			} else {
-				// add label in center
-				this.add(new JLabel("GAME OVER"));
+			} 
+			// add label in center
+			else {
+				this.add(new JLabel(
+							"GAME OVER\n Wait for remaining player scores"));
 			}
 		} // grid loop
+	
 		// draw new gamescreen
 		this.revalidate();
 		this.repaint();
@@ -132,6 +161,19 @@ public class GameHandler extends JPanel {
 			loadNextGame();
 		}
 	} // gameComplete
+
+	
+	// handle incoming packets
+	public void recvPacket(Packet pck) {
+		// enter lobby
+		if (pck.HEADER.equals("SESSIONJOINED")) {
+			showLobbyScreen();
+		}
+		// start game
+		else if (pck.HEADER.equals("GAMESTART")) {
+			startPlaying();
+		}
+	} // recvPacket
 
 
 	// return gamewindow dimension
