@@ -221,8 +221,10 @@ class IdleScreen extends JPanel implements ActionListener {
 			String sID = null;
 			if (source == joinSession) {
 				sID = JOptionPane.showInputDialog("Session ID to join:");
+				app.host = false;
 			} else if (source == newSession) {
 				sID = "NONE";
+				app.host = true;
 			}
 			// send SESSIONCONNECT packet to server.
 			app.server.sendSessionConnect(app.pName, sID);
