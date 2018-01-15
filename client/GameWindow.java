@@ -53,8 +53,7 @@ public class GameWindow extends JFrame
 		cstr.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(mainPanel, cstr);
 
-		loadGameHandler();
-		// loadIdleScreen();
+		loadIdleScreen();
 
 		// make and add right panel
 		JPanel rightPanel = makeRightPanel();
@@ -72,7 +71,7 @@ public class GameWindow extends JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// add to list of packet listeners
-		String[] hdrs = {"SCOREUPDATE"};
+		String[] hdrs = {"SCOREUPDATE", "SESSIONJOINED"};
 		Mediator.getInstance().addListener(this, hdrs);
 
 		// show finished window
@@ -84,6 +83,8 @@ public class GameWindow extends JFrame
 	public void recvPacket(Packet pck) {
 		if (pck.HEADER.equals("SCOREUPDATE")) {
 			updateScoreboard();
+		} else if (pck.HEADER.equals("SESSIONJOINED")) {
+			loadGameHandler();	
 		}
 	} // recvPacket
 
