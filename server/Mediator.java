@@ -30,35 +30,38 @@ public class Mediator {
 
 	// construct a new packet and send to all valid listners
 	public void sendPacket(Packet pck) {
+		// send to clients first, before sending to GameSession instances
+		// to ensure that client has PNAMe attribute set when GameSession reads packet
+		sendToClients(pck);
+		sendToOthers(pck);
+	} // sendPack
+
+
+	// send to all clients
+	public void sendToClients(Packet pck) {
 		// make clone of listners list (avoid concurrent modification)
 		ArrayList<InternalPacketListener> listenersClone;
 		listenersClone = new ArrayList<>(listeners);
 
-		// loop through all listeners
-		for (InternalPacketListener listener : listenersClone) {
-			// reset czech vars
-			boolean validHeader = false;
-			boolean validID = false;
-
-			// check if header in listeners list of accepted headers
-			for (String header : listener.acceptHeaders) {
-				if (pck.HEADER.equals(header)) {
-					validHeader = true;
-				}
-			} // header-czech
-
-			// check if session ID allowed
-			if (listener.acceptsID.equals("ALL") || 
-					listener.acceptsID.equals(pck.SESSIONID)) {
-				validID = true;
-			} // sID-czech
-
-			// send package if valid
-			if (validHeader && validID) {
-				listener.sendPacket(pck);
+		for ( InternalPacketListener intList : listenersClone ) {
+			if (intList.listener instanceof Client && intList.wantsPacket(pck) ) {
+				intList.sendPacket(pck);
 			}
-		} // listeners loop
-	} // sendPack
+		} // listners loop
+	} // sendToClients
+
+	// send to non-client listers (i.e. GameSessions)
+	public void sendToOthers(Packet pck) {
+		// make clone of listners list (avoid concurrent modification)
+		ArrayList<InternalPacketListener> listenersClone;
+		listenersClone = new ArrayList<>(listeners);
+
+		for ( InternalPacketListener intList : listenersClone ) {
+			if ( !(intList.listener instanceof Client) && intList.wantsPacket(pck) ) {
+				intList.sendPacket(pck);
+			}
+		} // listners loop
+	} // sendToClients
 } // Mediator
 
 
@@ -82,4 +85,32 @@ class InternalPacketListener {
 	public void sendPacket(Packet pck) {
 		listener.recvPacket(pck);
 	} //sendPack
+
+
+	// check recipient conditions
+	public boolean wantsPacket(Packet pck) {
+		// reset czech vars
+		boolean validHeader = false;
+		boolean validID = false;
+
+		// check if header in listeners list of accepted headers
+		for (String header : this.acceptHeaders) {
+			if (pck.HEADER.equals(header)) {
+				validHeader = true;
+			}
+		} // header-czech
+
+		// check if session ID allowed
+		if (this.acceptsID.equals("ALL") || 
+				this.acceptsID.equals(pck.SESSIONID)) {
+			validID = true;
+		} // sID-czech
+
+		// send package if valid
+		if (validHeader && validID) {
+			return true;
+		} else {
+			return false;
+		}
+	} // listenerWantsPacket
 } // PacketListener
