@@ -253,7 +253,7 @@ class GreenSquareGame extends Game {
 		r = new Random();
 
 		// make buttons
-		correctButton = new JButton("CLICKME");
+		correctButton = new JButton("CLICK ME!");
 		correctButton.addActionListener(this);
 		makeButtons();
 
@@ -267,14 +267,13 @@ class GreenSquareGame extends Game {
 
 	// make buttons
 	public void makeButtons() {
-		System.out.println("DEBUG: Making buttons board");
+		System.out.println("DEBUG: Making buttons board.");
 
 		// clear gamescreen
 		this.removeAll();
 
 		// decide true button placement
 		int trueButtonNo = r.nextInt(noOfButtons);
-		System.out.println("DEBUG: New btn no " + trueButtonNo);
 		// make all the buttons
 		for ( int i = 0; i < noOfButtons; i++ ) {
 			if ( i == trueButtonNo ) {
@@ -345,9 +344,7 @@ class GreenSquareGame extends Game {
    ***
    ***
    *** 
-   ***
    *** 
-   *** 
-   *** 
+ __***__
 /*******\
 \*******/
