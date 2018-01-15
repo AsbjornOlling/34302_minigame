@@ -171,6 +171,31 @@ class ClickTenTimes extends Game {
 } // ButtonGame
 
 
+/*
+ * Game about clicking the correct square:w
+ */
+class GreenSquareGame extends Game {
+	private boolean shouldRun;
+
+	// constructor
+	public GreenSquareGame(GameHandler handler) {
+		super(handler);
+
+		shouldRun = true;
+
+		// set layout and fill with buttons
+		int gWidth = 10;
+		int gHeight = 10;
+		setLayout(new GridLayout(gHeight, gWidth));
+		for (int i = 0; i < gHeight*gWidth; i++) {
+		}
+	} // constructor
+
+
+	public void run() {
+	} // thread loop
+} // GreenSquareGame
+
 
    /*\
    ***
