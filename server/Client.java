@@ -15,18 +15,22 @@ public class Client extends PacketListener implements Runnable {
 	ClientOut out;
 	String pName; // player info
 
+	// Boolean for threats
+	public boolean shouldRun;
+
 	// constructor
 	public Client (MinigameServer parent, Socket clientSocket) {
+		shouldRun =true;
 		this.parent = parent;
 		this.clientSocket = clientSocket;
 
 		// make incoming data handler
-		in = new ClientIn(clientSocket);	
+		in = new ClientIn(this);	
 		Thread inThread = new Thread(in);
 		inThread.start();
 
 		// make outgoint data handler
-		out = new ClientOut(clientSocket);
+		out = new ClientOut(this);
 		Thread outThread = new Thread(out);
 		outThread.start(); //*/
 
@@ -38,7 +42,6 @@ public class Client extends PacketListener implements Runnable {
 
 	// construct Packets and send to mediator
 	public void run() {
-		boolean shouldRun = true;
 		while (shouldRun) {
 			// only works with .toArray().length, and NOT with .size()
 			if (in.packetQueue.toArray().length != 0) { 
@@ -79,10 +82,13 @@ public class Client extends PacketListener implements Runnable {
 class ClientIn implements Runnable {
 	private BufferedReader inReader;
 	private ArrayList<String> dataQueue;
+	private final Client parent;
 	protected ArrayList<String[]> packetQueue;
 
 	// constructor
-	public ClientIn(Socket clientSocket) {
+	public ClientIn(Client parent) {
+		this.parent = parent;
+		Socket clientSocket = parent.clientSocket;
 		// init arraylists
 		dataQueue = new ArrayList<String>();
 		packetQueue = new ArrayList<String[]>();
@@ -98,7 +104,7 @@ class ClientIn implements Runnable {
 
 	// thread loop
 	public void run() {
-		while (true) {
+		while (parent.shouldRun) {
 			// read any incoming lines
 			String line;
 			try {
@@ -120,7 +126,7 @@ class ClientIn implements Runnable {
 
 	// read data queue and split it into discrete packets if possible
 	public void parseDataQueue() {
-		System.out.println("Dette er en test: " + dataQueue.get(dataQueue.size() -1));
+		System.out.println("INCOMING PACKET: " + dataQueue.get(dataQueue.size() -1));
 		// if the last bytes are END
 		if (dataQueue.get(dataQueue.size() - 1).equals("END")) {
 			// move the received packet to packetQueue
@@ -145,11 +151,14 @@ class ClientIn implements Runnable {
 class ClientOut implements Runnable {
 	ArrayList<String[]> packetQueue;
 
+	private final Client parent;
 	private OutputStream outStream;
 	private PrintWriter writer;
 
 	// constructor
-	public ClientOut(Socket clientSocket) {
+	public ClientOut(Client parent) {
+		this.parent = parent;
+		Socket clientSocket = parent.clientSocket;
 		// make printWriter object on clientSocket
 		try {
 			outStream = clientSocket.getOutputStream();
@@ -165,8 +174,7 @@ class ClientOut implements Runnable {
 
 	// thread loop
 	public void run() {
-		boolean shouldRun = true;
-		while (shouldRun) {
+		while (parent.shouldRun) {
 			// only works with .toArray().length, and NOT with .size()
 			if (packetQueue.toArray().length != 0) { 
 				sendNextPacket();
