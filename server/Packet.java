@@ -30,6 +30,7 @@ public class Packet {
 			} 
 
 			// parse packetArray
+			// this works for all packet types
 			HEADER = packetArray[0];
 	 		PNAME = packetArray[1].replace("PNAME: ", "");
 			SESSIONID = packetArray[2].replace("SESSIONID: ", "");
@@ -43,10 +44,6 @@ public class Packet {
 													 + " FROM: " + PNAME);
 			} else { 
 				GSCORE = 0;
-			}
-
-			if (HEADER.equals("GAMESTART")) {
-				System.out.println("Send pakker til alle clienter");
 			}
 		} else {
 			HEADER = "INVALID";

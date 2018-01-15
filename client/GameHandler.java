@@ -10,11 +10,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class GameHandler extends JPanel implements PacketListener {
+public class GameHandler extends JPanel 
+													implements PacketListener,ActionListener {
 	MinigameClient parent;
 
-	// window params
+	// window stuff
 	final int WIDTH, HEIGHT;
+	JButton gameStartBtn;
 
 	// game objects
 	int[] gamesList = {0, 1}; // TEMP TODO MAKE REAL
@@ -29,11 +31,8 @@ public class GameHandler extends JPanel implements PacketListener {
 		this.setLayout(new GridLayout(1, 1));
 
 		// add packet listener
-		String[] hdrs = {"SESSIONJOINED"};
+		String[] hdrs = {"SESSIONJOINED", "GAMESTART"};
 		Mediator.getInstance().addListener(this, hdrs);
-
-		// startPlaying();
-		// showLobbyScreen();
 	} // constructor
 
 
@@ -50,7 +49,10 @@ public class GameHandler extends JPanel implements PacketListener {
 		if (parent.host) {
 			lobPanel.add(new JLabel("YOU'RE THE HOST", 
 									JLabel.CENTER), BorderLayout.PAGE_START);
-			lobPanel.add(new JButton("START GAME"), BorderLayout.PAGE_END);
+
+			gameStartBtn = new JButton("START GAME");
+			gameStartBtn.addActionListener(this);
+			lobPanel.add(gameStartBtn, BorderLayout.PAGE_END);
 		} else {
 			lobPanel.add(new JLabel("WAITING FOR GAMES TO START", 
 									JLabel.CENTER), BorderLayout.PAGE_START);
@@ -62,6 +64,15 @@ public class GameHandler extends JPanel implements PacketListener {
 		this.repaint();
 	} // showLobby
 
+	public void actionPerformed(ActionEvent e) {
+		JButton eSource = (JButton) e.getSource();
+		if (eSource == gameStartBtn) {
+			System.out.println("DEBUG: Startgame button hit.");
+
+			// send packet
+			parent.server.sendGameStart();
+		}
+	}
 
 	// show this screen when all games completed
 	public void showGameOverScreen() {
@@ -93,6 +104,7 @@ public class GameHandler extends JPanel implements PacketListener {
 
 	// start games
 	public void startPlaying() {
+		System.out.println("INFO: Starting a round of minigames");
 		// start with first game in list
 		currentGameIdx = 0;
 		loadNextGame();
@@ -171,6 +183,7 @@ public class GameHandler extends JPanel implements PacketListener {
 		}
 		// start game
 		else if (pck.HEADER.equals("GAMESTART")) {
+			System.out.println("INFO: Starting new game on command from server.");
 			startPlaying();
 		}
 	} // recvPacket

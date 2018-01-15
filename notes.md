@@ -5,15 +5,14 @@
 
 **Server:**
 
-	* Detect client connection loss, and close sockets if it loses connection
 	* System for GAMESTART packets (only receive from host, then broadcast to all players)
 
 
 **Client:**
 
-	* Figure out how to make GameWindow a packetListener
-	* Load GameHandler on SessionJoined event
+	* Send GAMESTART package
 	* GAYMES
+
 
 
 ## Architecture
@@ -87,6 +86,11 @@ SESSIONSID: ab78qz
 GSCORE: *tal mellem 0 og 100*
 END
 
+GAMESTART
+PNAME: dinmor
+SESSIONID: pik slave snyd
+END
+
 
 *Fra server*
 
@@ -103,4 +107,7 @@ PSCORE: *akkumuleret score so far*
 ...
 PNAME: dinbror
 PSCORE: *akkumuleret score so far*
+END
+
+GAMESTART
 END

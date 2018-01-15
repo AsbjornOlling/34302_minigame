@@ -20,11 +20,14 @@ public class GameSession extends PacketListener {
 		"SESSIONID: ",
 		"END\r\n"
 	};
-
 	private final String[] SCOREUPDATE = {
 		"SCOREUPDATE\r\n",
 		"PNAME: ",		// repeat these two lines for number of players
 		"PSCORE: ",		// repeat these two lines for number of players
+		"END\r\n"
+	};
+	private final String[] GAMESTART = {
+		"GAMESTART\r\n",
 		"END\r\n"
 	};
 
@@ -57,12 +60,13 @@ public class GameSession extends PacketListener {
 		parent.sessions.put(sessionID, this);
 
 		// add to mediator
-		String[] hdrs = {"SESSIONCONNECT", "GAMECOMPLETE"};
+		String[] hdrs = {"SESSIONCONNECT", 
+										 "GAMECOMPLETE",
+										 "GAMESTART"};
 		Mediator.getInstance().addListener(this, hdrs, sessionID);
 
 		// generate gamesList
 		gamesList = genGamesList();
-		System.out.println("LIST OF GAMES TO PLAY: " + gamesList);
 
 		// add host
 		this.host = host;
@@ -88,8 +92,21 @@ public class GameSession extends PacketListener {
 			// udpate client scoreboards
 			broadcastScoreUpdate();
 		} // GAMECOMPLETE
+		else if (pck.HEADER.equals("GAMESTART")) {
+			if (pck.SOURCE == host) {
+				broadcastGameStart();
+			}
+		} // GAMESTART
 	} // recvPacket
 
+	public void broadcastGameStart() {
+		System.out.println("INFO: Broadcasting GAMESTART.");
+		
+		// send simple GAMESTART packet
+		for (Client c : clients) {
+			c.out.queuePacket(GAMESTART);
+		}
+	}
 
 	// broadcast scoreboard to all players
 	private void broadcastScoreUpdate() {

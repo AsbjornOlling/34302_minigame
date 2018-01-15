@@ -7,7 +7,8 @@ public class Packet {
 	private final Set<String> VALIDHEADERS = new HashSet<String>(
 		Arrays.asList(
 			"SESSIONJOINED",
-			"SCOREUPDATE"
+			"SCOREUPDATE",
+			"GAMESTART"
 		));
 
 	public final String HEADER;
@@ -25,11 +26,11 @@ public class Packet {
 		} // strip newline 
 
 		if (isValid(packetArray)) {
-			System.out.println("INFO: Parsing valid packet.");
+			System.out.println("DEBUG: Parsing valid packet.");
 
 			HEADER = packetArray[0];
 
-			// parse SESSIONJOINED
+			// parse SESSIONJOINED info
 			if (HEADER.equals("SESSIONJOINED")) {
 				GAMES = packetArray[1].replace("GAMES: ","");
 				SESSIONID = packetArray[2].replace("SESSIONID: ","");
@@ -39,12 +40,17 @@ public class Packet {
 				GAMES = null;
 			}
 
-			// parse SCOREUPDATE
+			// parse SCOREUPDATE info
 			if (HEADER.equals("SCOREUPDATE")) {
 				SCOREBOARD = parseScoreUpdate(packetArray);
 			} else {
 				// nullify unused vars
 				SCOREBOARD = null;
+			}
+
+			// parse GAMESTART
+			if (HEADER.equals("GAMESTART")) {
+				System.out.println("DEBUG: Parsing GAMESTART");
 			}
 		} // isValid
 		else { // if invalid packet
