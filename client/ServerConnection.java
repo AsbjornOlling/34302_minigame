@@ -60,14 +60,14 @@ public class ServerConnection {
 
 
 	// send GAMECOMPLETE message
-	public void sendGameComplete(String pn, String sID, int score) {
+	public void sendGameComplete(int score) {
 		// make copy of packet template
 		String[] packet = GAMECOMPLETE.clone();
 
 		// add pName
-		packet[1] += pn + "\r\n";
+		packet[1] += parent.pName + "\r\n";
 		// add sessionID
-		packet[2] += sID + "\r\n";
+		packet[2] += parent.sessionID + "\r\n";
 		// add gamescore
 		packet[3] += score + "\r\n";
 

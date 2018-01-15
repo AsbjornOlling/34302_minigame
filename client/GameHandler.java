@@ -84,7 +84,8 @@ public class GameHandler extends JPanel {
 
 	// send gameComplete message and load the next game
 	public void gameComplete(int score) {
-		// TODO sendGameComplete(pName, sessionID, score)
+		parent.server.sendGameComplete(score);
+
 		currentGameIdx++;
 		// detect end of gameslist
 		if (currentGameIdx > gamesList.length - 1) {
