@@ -28,10 +28,46 @@ public class GameHandler extends JPanel {
 
 		this.setLayout(new GridLayout(1, 1));
 
+		startPlaying();
+	} // constructor
+
+
+	// show screen before GAMESTART
+	public void showLobbyScreen() {
+	} // showLobby
+
+
+	// show this screen when all games completed
+	public void showGameOverScreen() {
+		System.out.println("INFO: Showing gameover screen.");
+		this.removeAll();
+
+		// make panel containing gameover screen
+		int w = 3;
+		int h = 3;
+		JPanel GOPanel = new JPanel();
+		GOPanel.setLayout(new GridLayout(h, w));
+		for (int i = 0; i < w*h; i++) {
+			if (i != 4) {
+				// add empty panel
+				this.add(new JPanel());
+			} else {
+				// add label in center
+				this.add(new JLabel("GAME OVER"));
+			}
+		} // grid loop
+		// draw new gamescreen
+		this.revalidate();
+		this.repaint();
+	} // showGameOver
+
+
+	// start games
+	public void startPlaying() {
 		// start with first game in list
 		currentGameIdx = 0;
 		loadNextGame();
-	} // constructor
+	} // start()
 
 
 	// load next game from list
@@ -49,12 +85,12 @@ public class GameHandler extends JPanel {
 		if ( no == 0 ) {
 			System.out.println("INFO: Fetching onebutton game");
 			g = new ClickTenTimes(this);
-		} 
+		}
 		// many buttons game
 		else if ( no == 1 ) {
 			System.out.println("INFO: Fetching manybutton game");
 			g = new GreenSquareGame(this);
-		} 
+		}
 		// invalid game
 		else {
 			System.out.println("ERROR: Tried to fetch invalid gameno.");
@@ -90,7 +126,7 @@ public class GameHandler extends JPanel {
 		// detect end of gameslist
 		if (currentGameIdx > gamesList.length - 1) {
 			System.out.println("INFO: All games complete!");
-			// PUT WINNER SCREEN HERE
+			showGameOverScreen();
 		} else {
 			System.out.println("INFO: Minigame over. Loading next one.");
 			loadNextGame();
