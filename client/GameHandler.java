@@ -24,7 +24,8 @@ public class GameHandler extends JPanel {
 		this.setLayout(new GridLayout(1, 1));
 
 		// testing - load button game
-		this.loadGame(new ClickTenTimes(this));
+		// this.loadGame(new ClickTenTimes(this));
+		this.loadGame(new GreenSquareGame(this));
 	} // constructor
 
 
@@ -182,14 +183,13 @@ class ClickTenTimes extends Game {
 class GreenSquareGame extends Game {
 	// game params
 	int timeToPlay = 10 * 1000; // in milis
-	int gWidth = 10;
-	int gHeight = 10;
+	int gWidth = 8;
+	int gHeight = 25;
 	int noOfButtons = gHeight*gWidth;
 
 	// game objects
 	Random r;
 	JButton correctButton;
-	JButton otherButtons;
 	long startTime;
 	int correctButtonClicks;
 
@@ -202,8 +202,7 @@ class GreenSquareGame extends Game {
 		// make buttons
 		correctButton = new JButton("CLICKME");
 		correctButton.addActionListener(this);
-		otherButtons = new JButton("DONT CLICKME");
-		otherButtons.addActionListener(this);
+		makeButtons();
 
 		// start counter
 		correctButtonClicks = 0;
@@ -215,11 +214,16 @@ class GreenSquareGame extends Game {
 
 	// make buttons
 	public void makeButtons() {
+		System.out.println("DEBUG: Making buttons board");
+
 		// clear gamescreen
 		this.removeAll();
+		this.revalidate();
+		this.repaint();
 
 		// decide true button placement
 		int trueButtonNo = r.nextInt(noOfButtons);
+		System.out.println("DEBUG: New btn no " + trueButtonNo);
 		// make all the buttons
 		for ( int i = 0; i < noOfButtons; i++ ) {
 			if ( i == trueButtonNo ) {
@@ -227,7 +231,8 @@ class GreenSquareGame extends Game {
 				add(correctButton);
 			} else {
 				// make bullshit button
-				add(otherButtons);
+				JButton badButton = new JButton("DON'T CLICK");
+				add(badButton);
 			}
 		} // loop
 	} // makebuttons()
@@ -250,7 +255,6 @@ class GreenSquareGame extends Game {
 	// show end screen and submit score
 	public void finishGame() {
 		int score = correctButtonClicks;
-
 		// TODO show end screen
 		try { Thread.sleep(gameOverScreenTime); } catch (Exception e) {}
 
@@ -262,17 +266,20 @@ class GreenSquareGame extends Game {
 	// handle button events
 	public void actionPerformed(ActionEvent e) {
 		Object eSource = e.getSource();
-		if ((JButton) eSource == correctButton ) {
-			System.out.println("DEBUG: Correct button clicked.");
-			correctButtonClicks++;
-		} else if ((JButton) eSource == otherButtons) {
-			System.out.println("DEBUG: Wrong button clicked.");
-			correctButtonClicks--;
-		}
-
-		// make new board for any button pressed
 		String eSourceClass = eSource.getClass().getName().toString(); 
 		if (eSourceClass == "javax.swing.JButton") {
+			// if correct button clicked
+			if ((JButton) eSource == correctButton ) {
+				System.out.println("DEBUG: Correct button clicked.");
+				correctButtonClicks++;
+			} 
+			// if not correct button
+			else { 
+				System.out.println("DEBUG: Bad button clicked.");
+				correctButtonClicks--;
+			}
+
+			// make new board regardless of button licked
 			System.out.println("DEBUG: making new board of buttons.");
 			makeButtons();
 		}
