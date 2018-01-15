@@ -13,7 +13,12 @@ import java.awt.event.*;
 public class GameHandler extends JPanel {
 	MinigameClient parent;
 
+	// window params
 	final int WIDTH, HEIGHT;
+
+	// game objects
+	int[] gamesList = {0, 1}; // TEMP TODO MAKE REAL
+	int currentGameIdx;
 
 	// constructor
 	public GameHandler(MinigameClient parent) {
@@ -23,30 +28,72 @@ public class GameHandler extends JPanel {
 
 		this.setLayout(new GridLayout(1, 1));
 
-		// testing - load button game
-		// this.loadGame(new ClickTenTimes(this));
-		this.loadGame(new GreenSquareGame(this));
+		// start with first game in list
+		currentGameIdx = 0;
+		loadNextGame();
 	} // constructor
+
+
+	// load next game from list
+	public void loadNextGame() {
+		int currentGameNo = gamesList[currentGameIdx];
+		Game nextGame = getGameNo(currentGameNo);
+		loadGame(nextGame);
+	} // loadNextGame
+
+
+	// fetch game with specific GameID
+	public Game getGameNo(int no) {
+		Game g;
+		// one button game
+		if ( no == 0 ) {
+			System.out.println("INFO: Fetching onebutton game");
+			g = new ClickTenTimes(this);
+		} 
+		// many buttons game
+		else if ( no == 1 ) {
+			System.out.println("INFO: Fetching manybutton game");
+			g = new GreenSquareGame(this);
+		} 
+		// invalid game
+		else {
+			System.out.println("ERROR: Tried to fetch invalid gameno.");
+			g = null;
+		}
+		return g;
+	} // getGameNo
 
 
 	// initialize a minigame
 	public void loadGame(Game game) {
-		// clear screen and add new game
+		// clear screen
 		this.removeAll();
+
+		// add new game
 		this.add(game);
 
 		// start game thread
 		Thread t = new Thread(game);
 		t.start();
+
+		// draw new gamescreen
+		this.revalidate();
+		this.repaint();
 	} // loadGame
 
 
-	// send gameComplete message
-	// and load the next game
+	// send gameComplete message and load the next game
 	public void gameComplete(int score) {
-		// sendGameComplete(pName, sessionID, score)
-		// load new game
-		loadGame(new ClickTenTimes(this));
+		// TODO sendGameComplete(pName, sessionID, score)
+		currentGameIdx++;
+		// detect end of gameslist
+		if (currentGameIdx > gamesList.length - 1) {
+			System.out.println("INFO: All games complete!");
+			// PUT WINNER SCREEN HERE
+		} else {
+			System.out.println("INFO: Minigame over. Loading next one.");
+			loadNextGame();
+		}
 	} // gameComplete
 
 
@@ -54,7 +101,6 @@ public class GameHandler extends JPanel {
 	public Dimension getPreferredSize() {
 		return new Dimension(WIDTH, HEIGHT);
 	} // getPreferredSize
-
 
 	// do something, idk: this one is required
 	public void paintComponent(Graphics g) {
@@ -83,8 +129,9 @@ abstract class Game extends JPanel implements Runnable, ActionListener {
 	// thread loop
 	public void run() {
 		while (shouldRun) {
-			update();
+			this.update();
 		} 
+		System.out.println("TERMINATING GAME");
 		finishGame();
 	} // thread loop
 
@@ -96,9 +143,11 @@ abstract class Game extends JPanel implements Runnable, ActionListener {
 } // Game
 
 
-// ClickTenTimes: A game about a button
+/* 
+ * GAMEID: 0
+ * ClickTenTimes: A game about a button
+ */
 class ClickTenTimes extends Game {
-	private boolean shouldRun;
 	private JButton tenClickButton;
 	private Integer clicksLeft;
 	private long startTime;
@@ -110,6 +159,18 @@ class ClickTenTimes extends Game {
 		// set simple layout
 		this.setLayout(new GridLayout(3, 3));
 
+		makeButton();
+
+		// init button
+		clicksLeft = 10;
+
+		// get time and start game
+		startTime = System.currentTimeMillis();
+	} // constructor
+
+
+	// make btn
+	private void makeButton() {
 		// eight empty spaces and one button
 		for (int i = 0; i < 9; i++) {	
 			if (i != 4) {
@@ -123,15 +184,7 @@ class ClickTenTimes extends Game {
 				add(tenClickButton);
 			}
 		} // grid loop
-
-		// init button
-		clicksLeft = 10;
-		update();
-
-		// get time and start game
-		startTime = System.currentTimeMillis();
-	} // constructor
-
+	} // makeBtn
 
 
 	// event listener
@@ -145,7 +198,6 @@ class ClickTenTimes extends Game {
 	// update button state
 	public void update() {
 		tenClickButton.setText(clicksLeft.toString());
-
 		// check for terminating gamestate
 		if (clicksLeft <= 0) {
 			// exit thread loop
@@ -159,7 +211,7 @@ class ClickTenTimes extends Game {
 		// calculate time to complete
 		long endTime = System.currentTimeMillis();
 		long timePassed = endTime - startTime;
-		System.out.println("GAME COMPLETED IN: "+timePassed);
+		System.out.println("DEBUG: Game completed in " + timePassed);
 		
 		// calculate score TODO make score of max 100
 		int score = (int) timePassed;
@@ -178,6 +230,7 @@ class ClickTenTimes extends Game {
 
 
 /*
+ * GAMEID: 1
  * Game about clicking the correct square
  */
 class GreenSquareGame extends Game {
@@ -218,8 +271,6 @@ class GreenSquareGame extends Game {
 
 		// clear gamescreen
 		this.removeAll();
-		this.revalidate();
-		this.repaint();
 
 		// decide true button placement
 		int trueButtonNo = r.nextInt(noOfButtons);
@@ -235,6 +286,10 @@ class GreenSquareGame extends Game {
 				add(badButton);
 			}
 		} // loop
+
+		// draw new board
+		this.revalidate();
+		this.repaint();
 	} // makebuttons()
 
 
@@ -280,7 +335,6 @@ class GreenSquareGame extends Game {
 			}
 
 			// make new board regardless of button licked
-			System.out.println("DEBUG: making new board of buttons.");
 			makeButtons();
 		}
 	} // actionPerformed
