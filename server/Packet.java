@@ -7,7 +7,8 @@ public class Packet {
 	private final Set<String> VALIDHEADERS = new HashSet<String>(
 		Arrays.asList(
 			"SESSIONCONNECT",
-			"GAMECOMPLETE"
+			"GAMECOMPLETE",
+			"GAMESTART"
 		));
 
 	public final String HEADER;
@@ -42,6 +43,10 @@ public class Packet {
 													 + " FROM: " + PNAME);
 			} else { 
 				GSCORE = 0;
+			}
+
+			if (HEADER.equals("GAMESTART")) {
+				System.out.println("Send pakker til alle clienter");
 			}
 		} else {
 			HEADER = "INVALID";
