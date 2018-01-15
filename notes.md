@@ -5,13 +5,16 @@
 
 **Server:**
 
-	* System for GAMESTART packets (only receive from host, then broadcast to all players)
+	* handle properly closed tcp connections
+	* Count number of gamecompletes received, declare winner at end.
+	* Deny connection to session if pname taken
+	* Deny connection to session if sessionID incorrect (and not "NONE")
 
 
 **Client:**
 
-	* Send GAMESTART package
-	* GAYMES
+	* make proper exit w/ tcp cleanup
+	* MOAR GAYMES
 
 
 
