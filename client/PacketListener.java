@@ -1,3 +1,3 @@
-public abstract class PacketListener {
+public interface PacketListener {
 	public abstract void recvPacket(Packet pck);
 }

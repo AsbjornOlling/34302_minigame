@@ -6,7 +6,7 @@
 // std lib imports
 import java.util.*;
 
-public class MinigameClient extends PacketListener {
+public class MinigameClient implements PacketListener {
 	// some GUI parameters	
 	public final int GUIWIDTH = 1280;
 	public final int GUIHEIGHT = 720;
@@ -45,9 +45,7 @@ public class MinigameClient extends PacketListener {
 		
 		else if (pck.HEADER.equals("SCOREUPDATE")) {
 			System.out.println("INFO: Got new scoreboard.");
-
 			scoreboard = pck.SCOREBOARD;
-			window.updateScoreboard();
 		}
 	} // recvPacket
 

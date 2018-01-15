@@ -13,7 +13,7 @@ import javax.swing.table.*;
  *
  * This class encapsulates all visible elements.
  */
-public class GameWindow extends JFrame implements ActionListener {
+public class GameWindow extends JFrame implements ActionListener,PacketListener {
 	// parent object
 	MinigameClient parent;
 
@@ -70,9 +70,21 @@ public class GameWindow extends JFrame implements ActionListener {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		// add to list of packet listeners
+		String[] hdrs = {"SCOREUPDATE"};
+		Mediator.getInstance().addListener(this, hdrs);
+
 		// show finished window
 		setVisible(true);
 	} // constructor
+
+
+	// hande packet events
+	public void recvPacket(Packet pck) {
+		if (pck.HEADER.equals("SCOREUPDATE")) {
+			updateScoreboard();
+		}
+	}
 
 
 	// load GameHandler instance

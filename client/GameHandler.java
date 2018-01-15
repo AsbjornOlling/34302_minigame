@@ -66,12 +66,26 @@ public class GameHandler extends JPanel {
 abstract class Game extends JPanel implements Runnable, ActionListener {
 	GameHandler handler;
 	int gameOverScreenTime = 500;
-
+	boolean shouldRun;
 
 	// constructor
 	public Game(GameHandler handler) {
 		this.handler = handler;
+		shouldRun = true;
 	} // constructor
+
+	// calculate score and send to handler
+	public abstract void finishGame();
+	// update on every runloop
+	public abstract void update();
+
+	// thread loop
+	public void run() {
+		while (shouldRun) {
+			update();
+		} 
+		finishGame();
+	} // thread loop
 
 
 	// return full size of handler
@@ -115,17 +129,8 @@ class ClickTenTimes extends Game {
 
 		// get time and start game
 		startTime = System.currentTimeMillis();
-		shouldRun = true;
 	} // constructor
 
-
-	// thread loop
-	public void run() {
-		while (shouldRun) {
-			update();
-		} 
-		finishGame();
-	} // thread loop
 
 
 	// event listener
@@ -172,28 +177,106 @@ class ClickTenTimes extends Game {
 
 
 /*
- * Game about clicking the correct square:w
+ * Game about clicking the correct square
  */
 class GreenSquareGame extends Game {
-	private boolean shouldRun;
+	// game params
+	int timeToPlay = 10 * 1000; // in milis
+	int gWidth = 10;
+	int gHeight = 10;
+	int noOfButtons = gHeight*gWidth;
+
+	// game objects
+	Random r;
+	JButton correctButton;
+	JButton otherButtons;
+	long startTime;
+	int correctButtonClicks;
 
 	// constructor
 	public GreenSquareGame(GameHandler handler) {
 		super(handler);
-
-		shouldRun = true;
-
-		// set layout and fill with buttons
-		int gWidth = 10;
-		int gHeight = 10;
 		setLayout(new GridLayout(gHeight, gWidth));
-		for (int i = 0; i < gHeight*gWidth; i++) {
-		}
+		r = new Random();
+
+		// make buttons
+		correctButton = new JButton("CLICKME");
+		correctButton.addActionListener(this);
+		otherButtons = new JButton("DONT CLICKME");
+		otherButtons.addActionListener(this);
+
+		// start counter
+		correctButtonClicks = 0;
+
+		// start timer
+		startTime = System.currentTimeMillis();
 	} // constructor
 
 
-	public void run() {
-	} // thread loop
+	// make buttons
+	public void makeButtons() {
+		// clear gamescreen
+		this.removeAll();
+
+		// decide true button placement
+		int trueButtonNo = r.nextInt(noOfButtons);
+		// make all the buttons
+		for ( int i = 0; i < noOfButtons; i++ ) {
+			if ( i == trueButtonNo ) {
+				// make nice button
+				add(correctButton);
+			} else {
+				// make bullshit button
+				add(otherButtons);
+			}
+		} // loop
+	} // makebuttons()
+
+
+	// update on every loop
+	public void update() {
+		// check time passed
+		long currentTime = System.currentTimeMillis();
+		long timePassed = currentTime - startTime;
+
+		// if playtime exceeded, end game
+		if (timePassed > timeToPlay) {
+			System.out.println("DEBUG: Gametime exceeded");
+			shouldRun = false;
+		}
+	} // run()
+
+
+	// show end screen and submit score
+	public void finishGame() {
+		int score = correctButtonClicks;
+
+		// TODO show end screen
+		try { Thread.sleep(gameOverScreenTime); } catch (Exception e) {}
+
+		// send gamescore, load new game
+		handler.gameComplete(score);
+	} // finishGame
+
+
+	// handle button events
+	public void actionPerformed(ActionEvent e) {
+		Object eSource = e.getSource();
+		if ((JButton) eSource == correctButton ) {
+			System.out.println("DEBUG: Correct button clicked.");
+			correctButtonClicks++;
+		} else if ((JButton) eSource == otherButtons) {
+			System.out.println("DEBUG: Wrong button clicked.");
+			correctButtonClicks--;
+		}
+
+		// make new board for any button pressed
+		String eSourceClass = eSource.getClass().getName().toString(); 
+		if (eSourceClass == "javax.swing.JButton") {
+			System.out.println("DEBUG: making new board of buttons.");
+			makeButtons();
+		}
+	} // actionPerformed
 } // GreenSquareGame
 
 
