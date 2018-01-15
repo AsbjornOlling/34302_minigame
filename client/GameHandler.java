@@ -91,8 +91,7 @@ public class GameHandler extends JPanel
 			} 
 			// add label in center
 			else {
-				this.add(new JLabel(
-							"GAME OVER\n Wait for remaining player scores"));
+				this.add(new JLabel("GAME OVER Wait for remaining player scores"));
 			}
 		} // grid loop
 	
@@ -104,6 +103,9 @@ public class GameHandler extends JPanel
 
 	// start games
 	public void startPlaying() {
+		// testing
+		showGameOverScreen();
+
 		System.out.println("INFO: Starting a round of minigames");
 		// start with first game in list
 		currentGameIdx = 0;
