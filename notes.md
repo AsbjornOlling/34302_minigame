@@ -7,7 +7,6 @@
 
 	* Detect client connection loss, and close sockets if it loses connection
 	* generate and send a space-separated list of games to play (just 1 for now)
-	* Avoid sending packets with PNAME: null and PSCORE: null (evt. by mediator sending to clients first)
 
 **Client:**
 
