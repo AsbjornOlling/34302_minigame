@@ -14,7 +14,7 @@ public class Packet {
 
 	public final String HEADER;
 	public final String SESSIONID;
-	public final String GAMES;
+	public final int[] GAMES;
 	public Object[][] SCOREBOARD;
 
 	// constructor
@@ -33,7 +33,17 @@ public class Packet {
 
 			// parse SESSIONJOINED info
 			if (HEADER.equals("SESSIONJOINED")) {
-				GAMES = packetArray[1].replace("GAMES: ","");
+				// parse games list
+				String gamesList = packetArray[1].replace("GAMES: ","");
+				String[] gamesArray = gamesList.split(" ");
+
+				// make int array
+				GAMES = new int[gamesArray.length];
+				for (int i = 0; i < gamesArray.length; i++) {
+					GAMES[i] = Integer.parseInt(gamesArray[i]);
+				}
+				System.out.println("DEBUG: Sorted gamesarray.");
+
 				SESSIONID = packetArray[2].replace("SESSIONID: ","");
 			} else {
 				// nullify not-used fields

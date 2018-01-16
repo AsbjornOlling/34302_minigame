@@ -41,7 +41,7 @@ public class GameSession extends PacketListener {
 	String gamesList;										// list of game ids to play
 
 	String sessionID;						// id for players to join
-	int gameLength = 3; 				// number of minigames to play in a round
+	int gameLength = 5; 				// number of minigames to play in a round
 	int noOfGames = 3;						// amount of games in client
 	boolean inLobby;			// allow other players to join
 	int gcsReceived;
@@ -113,6 +113,7 @@ public class GameSession extends PacketListener {
 
 			// count no GAMECOMPLETES received
 			gcsReceived++;
+			// detect round completed
 			if (gcsReceived >= clients.size() * gameLength) {
 				broadcastRoundOver();
 				resetToLobby();
@@ -242,23 +243,18 @@ public class GameSession extends PacketListener {
 	private String genGamesList() {
 		String gamesList = "";
 		int tempNo;
-		for (int i = 0; i < noOfGames; i++) {
-			tempNo = r.nextInt(gameLength);
-
-			// DONT DO THIS - allow repeat games
-			// get a new number, if it was a repeat
-			/* while (gamesList.contains(tempNo+"")) {
-				tempNo = r.nextInt(gameLength); 
-			} //*/ 
+		for (int i = 0; i < gameLength; i++) {
+			tempNo = r.nextInt(noOfGames);
 
 			// add no to string
 			gamesList += tempNo+"";
 
 			// add space if not the alst game
-			if ( i + 1 < noOfGames) {
+			if ( i + 1 < gameLength) {
 				gamesList += " ";
 			}
 		} // loop
+		System.out.println("DEBUG: Made list of games: " + gamesList);
 		return gamesList;
 	} //genGamesList
 } // GameSession

@@ -19,7 +19,7 @@ public class GameHandler extends JPanel
 	JButton gameStartBtn;
 
 	// game objects
-	int[] gamesList = {2, 0, 1}; // TEMP TODO MAKE REAL
+	int[] gamesList;
 	int currentGameIdx;
 
 	// constructor
@@ -175,6 +175,7 @@ public class GameHandler extends JPanel
 	public void recvPacket(Packet pck) {
 		// enter lobby
 		if (pck.HEADER.equals("SESSIONJOINED")) {
+			gamesList = pck.GAMES;
 			showLobbyScreen();
 		}
 		// start game
