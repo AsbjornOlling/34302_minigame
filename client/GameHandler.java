@@ -80,24 +80,13 @@ public class GameHandler extends JPanel
 		this.removeAll();
 
 		// make panel containing gameover screen
-		int w = 3;
-		int h = 3;
+		int w = 1;
+		int h = 2;
 		JPanel GOPanel = new JPanel();
 		GOPanel.setLayout(new GridLayout(h, w));
-		for (int i = 0; i < w*h; i++) {
-			// add empty panel
-			if (i != 4) {
-				this.add(new JPanel());
-			} 
-			// add label in center
-			else {
-				this.add(new JLabel("GAME OVER Wait for remaining player scores"));
-			}
-		} // grid loop
-	
-		// draw new gamescreen
-		this.revalidate();
-		this.repaint();
+		GOPanel.add(new JLabel("GAME OVER", JLabel.CENTER));
+		GOPanel.add(new JLabel("Wait for other players to finish.", JLabel.CENTER));
+		this.add(GOPanel);
 	} // showGameOver
 
 

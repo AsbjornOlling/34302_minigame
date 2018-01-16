@@ -14,6 +14,7 @@
 **Client:**
 
 	* make proper exit w/ tcp cleanup
+	* show error message if can't connect to server
 	* MOAR GAYMES
 
 

@@ -113,7 +113,7 @@ class ClientIn implements Runnable {
 			// read any incoming lines
 			String line;
 			try {
-				// add non-null ines read to dataQueue
+				// add all (non-null) lines read to dataQueue
 				if ( (line = inReader.readLine()) != null) {
 					dataQueue.add(line);
 					parseDataQueue();
@@ -121,10 +121,6 @@ class ClientIn implements Runnable {
 			} catch (Exception fuckExceptions) {
 				System.out.println("ERROR: Couldn't read line from client.");
 			}
-
-
-			// test connection
-
 		} // thread loop
 	} // run()
 
@@ -181,14 +177,15 @@ class ClientOut implements Runnable {
 	public void run() {
 		while (parent.shouldRun) {
 			// only works with .toArray().length, and NOT with .size()
-				try {
+			try {
 				Thread.sleep(200);
-				} catch (Exception e) {
-					System.out.println("Failed to sleep in client");
-				}
+			} catch (Exception e) {
+				System.out.println("ERROR: Failed to sleep in client.");
+			}
+
 			if (packetQueue.toArray().length != 0) { 
 				sendNextPacket();
-			}  // open output stream
+			} // open output stream
 		} // thread loop
 	} // run()
 

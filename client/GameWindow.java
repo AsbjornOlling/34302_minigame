@@ -45,7 +45,7 @@ public class GameWindow extends JFrame
 		setTitle("ITS JUST MINIGAMES OKAY");	
 		setSize(GUIWIDTH, GUIHEIGHT);
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		defineWindowCloseOperation();
 
 		// show finished window
 		setVisible(true);
@@ -55,6 +55,7 @@ public class GameWindow extends JFrame
 		Mediator.getInstance().addListener(this, hdrs);
 
 		loadIdleScreen();
+
 	} // constructor
 
 

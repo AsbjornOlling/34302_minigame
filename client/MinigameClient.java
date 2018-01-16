@@ -49,7 +49,7 @@ public class MinigameClient implements PacketListener {
 			scoreboard = pck.SCOREBOARD;
 		}
 	} // recvPacket
-
+	
 
 	// SHA-BANG
 	public static void main(String[] args) {
