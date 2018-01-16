@@ -312,9 +312,8 @@ class ClickTenTimes extends Game {
 		long timePassed = endTime - startTime;
 		System.out.println("DEBUG: Game completed in " + timePassed);
 		
-		// calculate score TODO make score of max 100
-		int score = (int) timePassed;
-		System.out.println("SCORE GOT: "+score);
+		// calculate score
+		int score = (int) (100 - (timePassed / 100));
 
 		// show game over screen for some time
 		tenClickButton.setText("DONE");
@@ -407,8 +406,9 @@ class GreenSquareGame extends Game {
 
 	// show end screen and submit score
 	public void finishGame() {
-		int score = correctButtonClicks;
-		// TODO show end screen
+		int score = correctButtonClicks * 10;
+		System.out.println("DEBUG: Completed game with "+score);
+
 		try { Thread.sleep(gameOverScreenTime); } catch (Exception e) {}
 
 		// send gamescore, load new game
@@ -446,6 +446,7 @@ class GreenSquareGame extends Game {
 class HitKeyGame extends Game implements KeyListener {
 	// constant params
 	int keysToHit = 5;
+	int perfectTime = 10; // in seconds
 	String alphabet = "abcdefghijklmopqrstuvxyz";
 	String idleText = "Wait...";
 
@@ -455,12 +456,16 @@ class HitKeyGame extends Game implements KeyListener {
 	JLabel label;
 	boolean keyHit;
 	int keysHit;
+	long totalTime;
 
 	// constructor
 	public HitKeyGame(GameHandler handler) {
 		super(handler);
 		r = new Random();
+
+		// start counters
 		keysHit = 0;
+		totalTime = 0;
 
 		// make jlabel
 		label = new JLabel(idleText);
@@ -486,8 +491,9 @@ class HitKeyGame extends Game implements KeyListener {
 			// get random char
 			targetChar = alphabet.charAt(r.nextInt(alphabet.length()));
 
-			// set jlabel text
+			// set jlabel text and start timer
 			label.setText("QUICK! HIT: " + targetChar);
+			long timeStart = System.currentTimeMillis();
 
 			// wait for key to be hit
 			keyHit = false;
@@ -496,13 +502,16 @@ class HitKeyGame extends Game implements KeyListener {
 			} // exit loop when key hit
 			System.out.println("DEBUG: Key hit");
 			
-			// reset 
+			// count time and reset 
+			long timeStop = System.currentTimeMillis();
+			long timeToHit = timeStop - timeStart;
+			totalTime += timeToHit;
 			targetChar = ' ';
 			keysHit++;
 			label.setText(idleText);
 		} else {
 			// ZZZzzzzz....
-			try { Thread.sleep(500); } catch (Exception e) {}
+			try { Thread.sleep(200); } catch (Exception e) {}
 		}
 
 		// exit game when no of keys hit
@@ -511,9 +520,19 @@ class HitKeyGame extends Game implements KeyListener {
 		}
 	} // update()
 
+
 	// when exiting main game loop
 	public void finishGame() {
-		// evaluate points and die
+		System.out.println("INFO: Finishing keyboard game");
+		System.out.println("DEBUG: Completed keyboard game in "+totalTime);
+		label.setText("DONE");
+
+		// calculate score
+		int score = (int) (100 - (totalTime / 100));
+
+		try { Thread.sleep(gameOverScreenTime); } catch (Exception e) {}
+
+		handler.gameComplete(score);
 	} // finishGame
 
 
