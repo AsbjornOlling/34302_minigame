@@ -21,6 +21,8 @@ public class GameWindow extends JFrame
 	// layout objects
 	GridBagConstraints cstr;
 	JPanel mainPanel;
+	JLabel statusHeader;
+	JButton exitbutton;
 
 	// scoreboard table data
 	TableModel scoreboardData;
@@ -64,6 +66,7 @@ public class GameWindow extends JFrame
 			updateScoreboard();
 		} else if (pck.HEADER.equals("SESSIONJOINED")) {
 			loadGameHandler();	
+			statusHeader.setText("SESSIONID: "+pck.SESSIONID);
 		} 
 	} // recvPacket
 
@@ -81,6 +84,7 @@ public class GameWindow extends JFrame
 
 		mainPanel.removeAll();
 		mainPanel.add(new IdleScreen(this));
+		this.repaint();
 	} // loadIdleScreen
 
 
@@ -118,7 +122,7 @@ public class GameWindow extends JFrame
 		rightPanel.setLayout(new GridBagLayout());
 
 		// label at top of the right panel
-		JLabel statusHeader = new JLabel("Session ID: [PLACEHOLDER]",
+		statusHeader = new JLabel("Session ID: [PLACEHOLDER]",
 																		 JLabel.CENTER);
 		cstr.fill = GridBagConstraints.VERTICAL;
 		cstr.weightx = 0;
@@ -138,13 +142,14 @@ public class GameWindow extends JFrame
 		rightPanel.add(scoreboard, cstr);
 
 		// and one button in the bottom
-		JButton button = new JButton("Exit");
+		exitbutton = new JButton("Exit");
+		exitbutton.addActionListener(this);
 		cstr.fill = GridBagConstraints.HORIZONTAL;
 		cstr.gridx = 0;
 		cstr.gridy = 2;
 		cstr.weightx = 1;
 		cstr.weighty = 0;
-		rightPanel.add(button, cstr); 
+		rightPanel.add(exitbutton, cstr); 
 
 		return rightPanel;
 	} // make right panel
@@ -173,8 +178,11 @@ public class GameWindow extends JFrame
 
 	// event handler
 	public void actionPerformed(ActionEvent e) {
-		// TODO handle exit game button
-		// TODO add leave room button
+		JButton eSource = (JButton) e.getSource();
+		if (eSource == exitbutton) {
+			parent.server.close(); // close socket
+			System.exit(0);
+		}
 	} // event handler
 
 
@@ -182,7 +190,6 @@ public class GameWindow extends JFrame
 	private void defineWindowCloseOperation() {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				// run close method on all objects
 				parent.server.close(); // close socket
 				System.exit(0);
 			}
