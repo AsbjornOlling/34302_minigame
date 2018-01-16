@@ -40,26 +40,30 @@ public class ServerConnection {
 	private final int PORT = 6666;
 
 	// connection objects
-	private Socket connection;
+	protected Socket s;
 	private ServerIn in;
 	private ServerOut out;
+	public boolean shouldRun;
 
 	// constructor
 	public ServerConnection(MinigameClient parent) {
 		this.parent = parent;
 
 		// open connection to server
-		try { connection = new Socket(HOST, PORT); } catch (Exception ex) {
+		try { s = new Socket(HOST, PORT); } catch (Exception ex) {
 			System.out.println("ERROR: Could not connect to server.");
 		}
 
+		// start sum shit
+		shouldRun = true;
+
 		// output object
-		out = new ServerOut(connection);
+		out = new ServerOut(this);
 		Thread outThread = new Thread(out);
 		outThread.start();
 
 		// input object
-		in = new ServerIn(connection);
+		in = new ServerIn(this);
 		Thread inThread = new Thread(in);
 		inThread.start();
 	} // constructor
@@ -70,14 +74,11 @@ public class ServerConnection {
 		// make copy of packet template
 		String[] packet = GAMECOMPLETE.clone();
 
-		// add pName
-		packet[1] += parent.pName + "\r\n";
-		// add sessionID
-		packet[2] += parent.sessionID + "\r\n";
-		// add gamescore
-		packet[3] += score + "\r\n";
+		packet[1] += parent.pName + "\r\n"; // pName
+		packet[2] += parent.sessionID + "\r\n"; // sID
+		packet[3] += score + "\r\n"; // GSCORE
 
-		// put packet into send queue
+		// send packet
 		out.queuePacket(packet);
 	} // GAMECOMPLETE
 
@@ -87,10 +88,8 @@ public class ServerConnection {
 		// make copy of packet template
 		String[] packet = SESSIONCONNECT.clone();
 
-		// add pName
-		packet[1] += pn + "\r\n";
-		// add sessionID
-		packet[2] += sID + "\r\n";
+		packet[1] += pn + "\r\n"; //pName
+		packet[2] += sID + "\r\n"; //sessionID
 
 		// queue packet for sending
 		out.queuePacket(packet);
@@ -110,16 +109,34 @@ public class ServerConnection {
 		// queue packet for sending
 		out.queuePacket(packet);
 	} //GAMESTART
-} // class
+
+
+	// close socket
+	public void close() {
+		System.out.println("INFO: Terminating ServerConnection");
+		// close all running threads
+		this.shouldRun = false;
+		
+		// close socket
+		try { s.close(); } catch (Exception e) {
+			System.out.println("ERROR: Trouble closing socket.");
+		}
+	} // close()
+} // serverconnection
 
 
 // object to send info to server
 class ServerOut implements Runnable {
+	private ServerConnection parent;
 	private PrintWriter writer;	
 	ArrayList<String[]> packetQueue;
 
 	// cosntructor
-	public ServerOut(Socket s) {
+	public ServerOut(ServerConnection parent) {
+		// parent objects
+		this.parent = parent;
+		Socket s = parent.s;
+
 		// printwriter to write to server	
 		try { writer = new PrintWriter(s.getOutputStream()); } 
 		catch (Exception e) {
@@ -132,8 +149,7 @@ class ServerOut implements Runnable {
 
 	// thread loop
 	public void run() {
-		boolean shouldRun = true;
-		while (shouldRun) {
+		while (parent.shouldRun) {
 			// send packets
 			if (packetQueue.toArray().length != 0) { 
 				sendNextPacket();
@@ -170,12 +186,16 @@ class ServerOut implements Runnable {
 
 // concurrent input reader for Client
 class ServerIn implements Runnable {
+	private ServerConnection parent;
 	private BufferedReader reader;
 	private ArrayList<String> dataQueue;
 	protected ArrayList<String[]> packetQueue;
 
 	// constructor
-	public ServerIn(Socket s) {
+	public ServerIn(ServerConnection parent) {
+		this.parent = parent;
+		Socket s = parent.s;
+
 		// init arraylists
 		dataQueue = new ArrayList<String>();
 		packetQueue = new ArrayList<String[]>();
@@ -192,8 +212,7 @@ class ServerIn implements Runnable {
 
 	// thread loop
 	public void run() {
-		boolean shouldRun = true;
-		while (shouldRun) {
+		while (parent.shouldRun) {
 
 			// read incoming lines
 			try { dataQueue.add(reader.readLine()); } catch (Exception e) { 

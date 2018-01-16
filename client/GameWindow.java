@@ -39,6 +39,51 @@ public class GameWindow extends JFrame
 		this.GAMEWIDTH = parent.GAMEWIDTH;
 		this.PANELWIDTH = GUIWIDTH - GAMEWIDTH;
 
+		makeTwoPanelLayout();
+
+		// title, size, and closeoperation
+		setTitle("ITS JUST MINIGAMES OKAY");	
+		setSize(GUIWIDTH, GUIHEIGHT);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		// show finished window
+		setVisible(true);
+
+		// add to list of packet listeners
+		String[] hdrs = {"SCOREUPDATE", "SESSIONJOINED"};
+		Mediator.getInstance().addListener(this, hdrs);
+
+		loadIdleScreen();
+	} // constructor
+
+
+	// hande packet events
+	public void recvPacket(Packet pck) {
+		if (pck.HEADER.equals("SCOREUPDATE")) {
+			updateScoreboard();
+		} else if (pck.HEADER.equals("SESSIONJOINED")) {
+			loadGameHandler();	
+		}
+	} // recvPacket
+
+
+	// load GameHandler instance on main panel
+	public void loadGameHandler() {
+		mainPanel.removeAll();
+		mainPanel.add(parent.game);
+	} // loadGameHandler
+
+
+	// create and show idle screen on main panel
+	public void loadIdleScreen() {
+		mainPanel.removeAll();
+		mainPanel.add(new IdleScreen(this));
+	} // loadIdleScreen
+
+
+	// make right panel, main panel layout
+	public void makeTwoPanelLayout() {
 		// init layout stuff
 		getContentPane().setLayout(new GridBagLayout());
 		cstr = new GridBagConstraints();
@@ -53,8 +98,6 @@ public class GameWindow extends JFrame
 		cstr.fill = GridBagConstraints.HORIZONTAL;
 		getContentPane().add(mainPanel, cstr);
 
-		loadIdleScreen();
-
 		// make and add right panel
 		JPanel rightPanel = makeRightPanel();
 		cstr.gridx = 1;
@@ -63,44 +106,7 @@ public class GameWindow extends JFrame
 		cstr.weighty = 1;
 		cstr.fill = GridBagConstraints.VERTICAL;
 		getContentPane().add(rightPanel, cstr);
-
-		// title, size, and closeoperation
-		setTitle("ITS JUST MINIGAMES OKAY");	
-		setSize(GUIWIDTH, GUIHEIGHT);
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// add to list of packet listeners
-		String[] hdrs = {"SCOREUPDATE", "SESSIONJOINED"};
-		Mediator.getInstance().addListener(this, hdrs);
-
-		// show finished window
-		setVisible(true);
-	} // constructor
-
-
-	// hande packet events
-	public void recvPacket(Packet pck) {
-		if (pck.HEADER.equals("SCOREUPDATE")) {
-			updateScoreboard();
-		} else if (pck.HEADER.equals("SESSIONJOINED")) {
-			loadGameHandler();	
-		}
-	} // recvPacket
-
-
-	// load GameHandler instance
-	public void loadGameHandler() {
-		mainPanel.removeAll();
-		mainPanel.add(parent.game);
-	} // loadGameHandler
-
-
-	// create and show idle screen
-	public void loadIdleScreen() {
-		mainPanel.removeAll();
-		mainPanel.add(new IdleScreen(this));
-	} // loadIdleScreen
+	} // make TwoPanelLayout
 
 
 	// right UI panel containing scoreboard, session ID, etc
@@ -168,6 +174,18 @@ public class GameWindow extends JFrame
 		// TODO handle exit game button
 		// TODO add leave room button
 	} // event handler
+
+
+	// define the operation to run on close
+	private void defineWindowCloseOperation() {
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				// run close method on all objects
+				parent.server.close(); // close socket
+				System.exit(0);
+			}
+		});
+	} // dWCO
 } // GameWindow
 
 
