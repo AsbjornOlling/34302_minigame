@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class GameHandler extends JPanel 
-													implements PacketListener,ActionListener {
+								implements PacketListener, ActionListener {
 	MinigameClient parent;
 
 	// window stuff
@@ -31,7 +31,7 @@ public class GameHandler extends JPanel
 		this.setLayout(new GridLayout(1, 1));
 
 		// add packet listener
-		String[] hdrs = {"SESSIONJOINED", "GAMESTART"};
+		String[] hdrs = {"SESSIONJOINED", "GAMESTART", "ROUNDOVER"};
 		Mediator.getInstance().addListener(this, hdrs);
 	} // constructor
 
@@ -176,6 +176,16 @@ public class GameHandler extends JPanel
 		else if (pck.HEADER.equals("GAMESTART")) {
 			System.out.println("INFO: Starting new game on command from server.");
 			startPlaying();
+		}
+		// round over
+		else if (pck.HEADER.equals("ROUNDOVER")) {
+			System.out.println("INFO: Round winner found.");
+
+			// show dialog with winner
+			JOptionPane.showMessageDialog(this, 
+					"Winner found: "+parent.scoreboard[0][0]);
+
+			showLobbyScreen();
 		}
 	} // recvPacket
 

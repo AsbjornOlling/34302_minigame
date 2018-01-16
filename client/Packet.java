@@ -8,7 +8,8 @@ public class Packet {
 		Arrays.asList(
 			"SESSIONJOINED",
 			"SCOREUPDATE",
-			"GAMESTART"
+			"GAMESTART",
+			"ROUNDOVER"
 		));
 
 	public final String HEADER;
@@ -51,6 +52,11 @@ public class Packet {
 			// parse GAMESTART
 			if (HEADER.equals("GAMESTART")) {
 				System.out.println("DEBUG: Parsing GAMESTART");
+			}
+
+			// parse ROUNDOVER
+			if (HEADER.equals("ROUNDOVER")) {
+				System.out.println("DEBUG: Parsing ROUNDOVER");
 			}
 		} // isValid
 		else { // if invalid packet

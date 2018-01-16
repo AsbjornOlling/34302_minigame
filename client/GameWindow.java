@@ -51,7 +51,7 @@ public class GameWindow extends JFrame
 		setVisible(true);
 
 		// add to list of packet listeners
-		String[] hdrs = {"SCOREUPDATE", "SESSIONJOINED"};
+		String[] hdrs = {"SCOREUPDATE", "SESSIONJOINED", "ROUNDOVER"};
 		Mediator.getInstance().addListener(this, hdrs);
 
 		loadIdleScreen();
@@ -64,7 +64,7 @@ public class GameWindow extends JFrame
 			updateScoreboard();
 		} else if (pck.HEADER.equals("SESSIONJOINED")) {
 			loadGameHandler();	
-		}
+		} 
 	} // recvPacket
 
 

@@ -30,6 +30,10 @@ public class GameSession extends PacketListener {
 		"GAMESTART\r\n",
 		"END\r\n"
 	};
+	private final String[] ROUNDOVER = {
+		"ROUNDOVER\r\n",
+		"END\r\n"
+	};
 
 	Client host;												// creator of the session
 	ArrayList<Client> clients;					// all connected clients
@@ -37,8 +41,10 @@ public class GameSession extends PacketListener {
 	String gamesList;										// list of game ids to play
 
 	String sessionID;						// id for players to join
-	int gameLength = 8; 				// number of minigames to play
-	boolean inLobby = true;			// allow other players to join
+	int gameLength = 2; 				// number of minigames to play in a round
+	int noOfGames = 2;						// amount of games in client
+	boolean inLobby;			// allow other players to join
+	int gcsReceived;
 
 
 	// constructor
@@ -66,13 +72,22 @@ public class GameSession extends PacketListener {
 										 "QUIT"};
 		Mediator.getInstance().addListener(this, hdrs, sessionID);
 
-		// generate gamesList
-		gamesList = genGamesList();
+		resetToLobby();
 
 		// add host
 		this.host = host;
 		addClient(host, host.pName);
 	} // constructor
+
+
+	// reset session to lobbystate
+	public void resetToLobby() {
+		System.out.println("INFO: Entering lobbystate.");
+
+		inLobby = true;
+		gamesList = genGamesList();
+		gcsReceived = 0;
+	} // reset
 
 	
 	// receive packets from mediator
@@ -95,6 +110,13 @@ public class GameSession extends PacketListener {
 										 
 			// udpate client scoreboards
 			broadcastScoreUpdate();
+
+			// count no GAMECOMPLETES received
+			gcsReceived++;
+			if (gcsReceived >= clients.size() * gameLength) {
+				broadcastRoundOver();
+				resetToLobby();
+			}
 		} // GAMECOMPLETE
 
 		// GAMESTART
@@ -117,6 +139,18 @@ public class GameSession extends PacketListener {
 			pck.SOURCE.kill();
 		}
 	} // recvPacket
+
+
+	// broadcast game winner to players
+	public void broadcastRoundOver() {
+		System.out.println("INFO: Broadcasting ROUNDOVER.");
+		
+		// send simple GAMESTART packet
+		for (Client c : clients) {
+			c.out.queuePacket(ROUNDOVER);
+		}
+	} // broadcastWinner
+
 
 	public void broadcastGameStart() {
 		System.out.println("INFO: Broadcasting GAMESTART.");
@@ -207,15 +241,15 @@ public class GameSession extends PacketListener {
 	// generate list of games to play in this session
 	private String genGamesList() {
 		String gamesList = "";
-		int noOfGames = 3;
 		int tempNo;
 		for (int i = 0; i < noOfGames; i++) {
 			tempNo = r.nextInt(gameLength);
 
+			// DONT DO THIS - allow repeat games
 			// get a new number, if it was a repeat
-			while (gamesList.contains(tempNo+"")) {
-				tempNo = r.nextInt(gameLength);
-			}
+			/* while (gamesList.contains(tempNo+"")) {
+				tempNo = r.nextInt(gameLength); 
+			} //*/ 
 
 			// add no to string
 			gamesList += tempNo+"";
