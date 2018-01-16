@@ -42,7 +42,7 @@ public class ServerConnection {
 	};
 
 	// server address
-	private final String HOST = "localhost";
+	private final String HOST = "10.16.101.156";
 	private final int PORT = 6666;
 
 	// connection objects
