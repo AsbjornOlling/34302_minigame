@@ -19,7 +19,7 @@ public class GameHandler extends JPanel
 	JButton gameStartBtn;
 
 	// game objects
-	int[] gamesList = {0, 1}; // TEMP TODO MAKE REAL
+	int[] gamesList = {2, 0, 1}; // TEMP TODO MAKE REAL
 	int currentGameIdx;
 
 	// constructor
@@ -123,6 +123,11 @@ public class GameHandler extends JPanel
 			System.out.println("INFO: Fetching manybutton game");
 			g = new GreenSquareGame(this);
 		}
+		// hit key game
+		else if ( no == 2 ) {
+			System.out.println("INFO: Fetching keyboard game");
+			g = new HitKeyGame(this);
+		}
 		// invalid game
 		else {
 			System.out.println("ERROR: Tried to fetch invalid gameno.");
@@ -185,6 +190,7 @@ public class GameHandler extends JPanel
 			JOptionPane.showMessageDialog(this, 
 					"Winner found: "+parent.scoreboard[0][0]);
 
+			// throw player back into lobby
 			showLobbyScreen();
 		}
 	} // recvPacket
@@ -431,6 +437,100 @@ class GreenSquareGame extends Game {
 		}
 	} // actionPerformed
 } // GreenSquareGame
+
+
+/*
+ * GAMEID: 2
+ * Game about hitting a key on your keyboard
+ */
+class HitKeyGame extends Game implements KeyListener {
+	// constant params
+	int keysToHit = 5;
+	String alphabet = "abcdefghijklmopqrstuvxyz";
+	String idleText = "Wait...";
+
+	// game objects
+	Random r;
+	char targetChar;
+	JLabel label;
+	boolean keyHit;
+	int keysHit;
+
+	// constructor
+	public HitKeyGame(GameHandler handler) {
+		super(handler);
+		r = new Random();
+		keysHit = 0;
+
+		// make jlabel
+		label = new JLabel(idleText);
+		this.add(label);
+
+		// accept focus
+		setFocusable(true);
+
+		// add keylistener
+		addKeyListener(this);
+	} // constr
+
+
+	// run in thread loop
+	public void update() {
+		// DEMAND FOCUS
+		requestFocus();
+
+		// make random char at random interval
+		int randInt = r.nextInt(5);
+		if (randInt == 0) {
+			System.out.println("DEBUG: Generating random char.");
+			// get random char
+			targetChar = alphabet.charAt(r.nextInt(alphabet.length()));
+
+			// set jlabel text
+			label.setText("QUICK! HIT: " + targetChar);
+
+			// wait for key to be hit
+			keyHit = false;
+			while (!keyHit) {
+				try { Thread.sleep(10); } catch (Exception e) {}
+			} // exit loop when key hit
+			System.out.println("DEBUG: Key hit");
+			
+			// reset 
+			targetChar = ' ';
+			keysHit++;
+			label.setText(idleText);
+		} else {
+			// ZZZzzzzz....
+			try { Thread.sleep(500); } catch (Exception e) {}
+		}
+
+		// exit game when no of keys hit
+		if (keysHit >= keysToHit) {
+			shouldRun = false;
+		}
+	} // update()
+
+	// when exiting main game loop
+	public void finishGame() {
+		// evaluate points and die
+	} // finishGame
+
+
+	public void keyPressed(KeyEvent e) {
+		char charHit = e.getKeyChar();
+		if (charHit == targetChar) {
+			keyHit = true;
+		}
+		System.out.println("DEBUG: Hit key "+charHit);
+	} //keyTyped
+
+
+	// required unused methods
+	public void keyReleased(KeyEvent e) { } 
+	public void keyTyped(KeyEvent e) { }
+	public void actionPerformed(ActionEvent e) { }
+} // hitkeygame
 
 
    /*\
