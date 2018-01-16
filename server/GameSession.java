@@ -41,8 +41,8 @@ public class GameSession extends PacketListener {
 	String gamesList;										// list of game ids to play
 
 	String sessionID;						// id for players to join
-	int gameLength = 2; 				// number of minigames to play in a round
-	int noOfGames = 2;						// amount of games in client
+	int gameLength = 3; 				// number of minigames to play in a round
+	int noOfGames = 3;						// amount of games in client
 	boolean inLobby;			// allow other players to join
 	int gcsReceived;
 
