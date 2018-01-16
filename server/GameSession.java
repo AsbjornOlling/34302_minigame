@@ -11,9 +11,9 @@ import java.io.*;
 
 public class GameSession extends PacketListener {
 	MinigameServer parent;
-
 	Random r; // randomizer
 
+	// packet templates
 	private final String[] SESSIONJOINED = {
 		"SESSIONJOINED\r\n",
 		"GAMES: ",
@@ -33,8 +33,8 @@ public class GameSession extends PacketListener {
 
 	Client host;												// creator of the session
 	ArrayList<Client> clients;					// all connected clients
-	HashMap<String,Integer> scoreboard; // a table of points (PName:Points)
-	String gamesList;								// list of game ids to play
+	HashMap<String,Integer> scoreboard; // table of points (PName:Points)
+	String gamesList;										// list of game ids to play
 
 	String sessionID;						// id for players to join
 	int gameLength = 8; 				// number of minigames to play
@@ -62,7 +62,8 @@ public class GameSession extends PacketListener {
 		// add to mediator
 		String[] hdrs = {"SESSIONCONNECT", 
 										 "GAMECOMPLETE",
-										 "GAMESTART"};
+										 "GAMESTART",
+										 "QUIT"};
 		Mediator.getInstance().addListener(this, hdrs, sessionID);
 
 		// generate gamesList
@@ -76,10 +77,13 @@ public class GameSession extends PacketListener {
 	
 	// receive packets from mediator
 	public void recvPacket(Packet pck) {
+		// SESSIONCONNECT
 		if (pck.HEADER.equals("SESSIONCONNECT")
 				&& pck.SESSIONID.equals(this.sessionID)) {
 			addClient(pck.SOURCE, pck.PNAME);
 		} // SESSIONCONNECT
+
+		// GAMECOMPLETE
 		else if (pck.HEADER.equals("GAMECOMPLETE")
 						 && pck.SESSIONID.equals(this.sessionID)) {
 			System.out.println("INFO: " + pck.PNAME + " received " + pck.GSCORE + "points.");
@@ -92,11 +96,26 @@ public class GameSession extends PacketListener {
 			// udpate client scoreboards
 			broadcastScoreUpdate();
 		} // GAMECOMPLETE
+
+		// GAMESTART
 		else if (pck.HEADER.equals("GAMESTART")) {
 			if (pck.SOURCE == host) {
 				broadcastGameStart();
 			}
 		} // GAMESTART
+
+		// QUIT
+		else if (pck.HEADER.equals("QUIT")) {
+			System.out.println("INFO: Removing a client.");
+
+			// remove client from session
+			clients.remove(pck.SOURCE);
+			// remove client from server
+			parent.allClients.remove(pck.SOURCE);
+
+			// stop client threads, close socket
+			pck.SOURCE.kill();
+		}
 	} // recvPacket
 
 	public void broadcastGameStart() {
@@ -185,7 +204,6 @@ public class GameSession extends PacketListener {
 	} // genSessionID
 	
 
-	// TODO
 	// generate list of games to play in this session
 	private String genGamesList() {
 		String gamesList = "";

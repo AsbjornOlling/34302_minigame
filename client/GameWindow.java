@@ -55,7 +55,6 @@ public class GameWindow extends JFrame
 		Mediator.getInstance().addListener(this, hdrs);
 
 		loadIdleScreen();
-
 	} // constructor
 
 
@@ -78,6 +77,8 @@ public class GameWindow extends JFrame
 
 	// create and show idle screen on main panel
 	public void loadIdleScreen() {
+		System.out.println("INFO: Loading Idlescreen");
+
 		mainPanel.removeAll();
 		mainPanel.add(new IdleScreen(this));
 	} // loadIdleScreen

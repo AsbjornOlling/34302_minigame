@@ -8,7 +8,8 @@ public class Packet {
 		Arrays.asList(
 			"SESSIONCONNECT",
 			"GAMECOMPLETE",
-			"GAMESTART"
+			"GAMESTART",
+			"QUIT"
 		));
 
 	public final String HEADER;
@@ -44,6 +45,14 @@ public class Packet {
 													 + " FROM: " + PNAME);
 			} else { 
 				GSCORE = 0;
+			}
+
+			if (HEADER.equals("GAMESTART")) {
+				System.out.println("DEBUG: GAMESTART packet read");
+			}
+
+			if (HEADER.equals("QUIT")) {
+				System.out.println("DEBUG: QUIT packet read");
 			}
 		} else {
 			HEADER = "INVALID";

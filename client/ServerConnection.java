@@ -129,11 +129,12 @@ public class ServerConnection {
 	// close socket
 	public void close() {
 		System.out.println("INFO: Terminating ServerConnection");
-		// close all running threads
-		this.shouldRun = false;
-		
 		// send QUIT message to server
 		sendQuit();
+		out.sendNextPacket();
+
+		// close all running threads
+		this.shouldRun = false;
 
 		// close socket
 		try { s.close(); } catch (Exception e) {
@@ -177,7 +178,7 @@ class ServerOut implements Runnable {
 
 
 	// extract a packet and send to client
-	private void sendNextPacket() {
+	protected void sendNextPacket() {
 		String[] packet = packetQueue.get(0);
 		packetQueue.remove(packet);
 		sendPacket(packet);

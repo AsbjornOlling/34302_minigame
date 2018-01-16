@@ -20,7 +20,7 @@ public class Client extends PacketListener implements Runnable {
 
 	// constructor
 	public Client (MinigameServer parent, Socket clientSocket) {
-		shouldRun =true;
+		shouldRun = true;
 		this.parent = parent;
 		this.clientSocket = clientSocket;
 
@@ -73,13 +73,15 @@ public class Client extends PacketListener implements Runnable {
 		} // SESSIONCONNECT
 	} // recvPacket
 
-	// TODO move this to other TODO
-	// terminate connection to client
-	public void closeSocket() {
+
+	// kill threads and close socket
+	public void kill() {
+		System.out.println("INFO: Killing client and threads");
+		shouldRun = false;
 		try { clientSocket.close(); } catch (IOException ioEx) {
 			System.out.println("ERROR: Could not close connection to client.");
 		}
-	} // CloseSocket
+	}
 } // Class
 
 
@@ -100,7 +102,8 @@ class ClientIn implements Runnable {
 
 		// make reader on clientSocket
 		try { 
-			inReader = new BufferedReader( new InputStreamReader( clientSocket.getInputStream() ) );
+			inReader = new BufferedReader(new InputStreamReader( 
+									 clientSocket.getInputStream()));
 		} catch (IOException ioEx) {
 			System.out.println("ERROR: Could not make input reader.");
 		}
