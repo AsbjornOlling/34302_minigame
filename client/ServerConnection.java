@@ -34,6 +34,12 @@ public class ServerConnection {
 		"SESSIONID: ",
 		"END\r\n"
 	};
+	private final String[] QUIT = {
+		"QUIT\r\n",
+		"PNAME: ",
+		"SESSIONID: ",
+		"END\r\n"
+	};
 
 	// server address
 	private final String HOST = "localhost";
@@ -101,15 +107,24 @@ public class ServerConnection {
 		// make copy of packet template
 		String[] packet = GAMESTART.clone();
 
-		// add pName
-		packet[1] += parent.pName + "\r\n";
-		// add sessionID
-		packet[2] += parent.sessionID + "\r\n";
+		packet[1] += parent.pName + "\r\n"; //pName
+		packet[2] += parent.sessionID + "\r\n"; // sessionID
 
 		// queue packet for sending
 		out.queuePacket(packet);
 	} //GAMESTART
 
+	// QUIT message
+	public void sendQuit() {
+		// make copy of packet template
+		String[] packet = QUIT.clone();
+
+		packet[1] += parent.pName + "\r\n"; //pName
+		packet[2] += parent.sessionID + "\r\n"; // sessionID
+
+		// queue packet for sending
+		out.queuePacket(packet);
+	} //sendQuit
 
 	// close socket
 	public void close() {
@@ -117,6 +132,9 @@ public class ServerConnection {
 		// close all running threads
 		this.shouldRun = false;
 		
+		// send QUIT message to server
+		sendQuit();
+
 		// close socket
 		try { s.close(); } catch (Exception e) {
 			System.out.println("ERROR: Trouble closing socket.");
@@ -213,7 +231,6 @@ class ServerIn implements Runnable {
 	// thread loop
 	public void run() {
 		while (parent.shouldRun) {
-
 			// read incoming lines
 			try { dataQueue.add(reader.readLine()); } catch (Exception e) { 
 				System.out.println("ERROR: Could not read input.");
